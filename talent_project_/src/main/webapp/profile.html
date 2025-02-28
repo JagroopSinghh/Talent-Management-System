@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="stylesheet" href="assets/css/main.css" type="text/css"/>
+
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Employee Profile</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-50" onload="showEmployeeprofile()">
+  <script>
+      
+        function fetchUser() {
+            fetch("/fetchuser") // Adjust the API URL if needed
+            .then(response => response.json()) // Convert response to JSON
+            .then(data => {
+                localStorage.setItem("loggedInUser", data.username); // Store username
+                document.getElementById("usermail").innerText = data.username;
+            })
+            .catch(error => {
+                console.error("Error fetching user:", error);
+                document.getElementById("usermail").innerText = "Error loading user";
+            });
+        }
+        let storedUser = localStorage.getItem("loggedInUser");
+        console.log("Stored User:", storedUser);
+        // Call the function when the page loads
+        fetchUser();
+      alert(storedUser);
+            function  showEmployeeprofile(){
+                var url ="./showEmployeeProfile?mail="+storedUser;
+                
+                fetch(url,{method: "POST"})
+                    .then(response => response.text())
+                    .then(ans => renderProfile(ans)); 
+            }
+            function renderProfile(ans){
+               ans = ans.trim();
+               var mainobj = JSON.parse(ans);
+               var arr = mainobj["ans"];
+               
+               var res = "";
+                    var st = arr[0];
+                    
+                document.getElementById("fullname").innerHTML = st.E_name;
+                document.getElementById("post").innerHTML = st.E_post;
+                document.getElementById("email").innerHTML = st.E_mail;
+                document.getElementById("phone").innerHTML = st.E_phone;
+                document.getElementById("address").innerHTML = st.E_address;
+                 }
+                 
+                 
+        function updateprofileinfo(){
+                
+                
+                var newmail = document.getElementById("newemail").value;
+                var newaddress = document.getElementById("newaddress").value;
+                var newphone = document.getElementById("newphone").value;
+            
+            
+            var formdata = new FormData();
+            formdata.append("newmail",newmail);
+            formdata.append("newaddress",newaddress);
+            formdata.append("newphone",newphone);
+            formdata.append("mail",storedUser);
+            
+            var url = "/updateprofileinfo";
+            
+            fetch(url,{method: "POST", body: formdata})
+                    .then(response => response.text())
+                    .then(ans => renderResponse(ans));    
+            
+            
+        }
+        function renderResponse(ans){
+            console.log(ans);
+            if(ans == "success")
+            {
+                alert("successful");
+                showEmployeeprofile()
+            }
+            else
+            {
+                alert("Something went wrong at the backend");
+            }
+            
+        }
+
+        
+            
+
+  </script>
+
+  <!-- Profile Page -->
+  <section class="py-10">
+    <div class="container mx-auto px-4">
+      <!-- Profile Header -->
+      <div class="bg-white shadow-lg rounded-lg p-6 mb-8">
+        <div class="flex items-center space-x-6">
+          <img src="https://via.placeholder.com/100" alt="Profile Picture" class="w-24 h-24 rounded-full shadow-md">
+          <div>
+            <h2 class="text-2xl font-bold text-gray-800" id="fullname">Roop Randhawafdfdf</h2>
+            <p class="text-gray-600" id="post">Software Engineer</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Profile Sections -->
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <!-- Left Section -->
+        <div class="lg:col-span-2 bg-white shadow-lg rounded-lg p-6">
+          <!-- Personal Details -->
+          <div class="mb-6">
+            <h3 class="text-xl font-semibold text-gray-800 mb-4">Personal Details</h3>
+            <ul class="text-gray-600 space-y-2">
+                <li><strong>Email:</strong> <div id="email">john.doe@example.com</div></li>
+                <li><strong>Phone:</strong><div id="phone"> +1 234 567 890</div></li>
+                <li><strong>Address:</strong><div id="address"> 123 Main Street, City, Country</div></li>
+            </ul>
+          </div>
+
+          <!-- Skills -->
+          <div class="mb-6">
+            <h3 class="text-xl font-semibold text-gray-800 mb-4">Skills</h3>
+            <ul class="flex flex-wrap gap-2">
+              <li class="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm">Django</li>
+              <li class="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm">Python</li>
+              <li class="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm">HTML</li>
+              <li class="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm">CSS</li>
+              <li class="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm">JavaScript</li>
+            </ul>
+          </div>
+
+          <!-- Certifications -->
+          <div class="mb-6">
+            <h3 class="text-xl font-semibold text-gray-800 mb-4">Certifications</h3>
+            <ul class="list-disc list-inside text-gray-600 space-y-2">
+              <li>Certified Python Developer - 2023</li>
+              <li>Frontend Development Certification - 2022</li>
+              <li>Advanced Django Course - 2021</li>
+            </ul>
+          </div>
+
+          <!-- Performance History -->
+          <div>
+            <h3 class="text-xl font-semibold text-gray-800 mb-4">Performance History</h3>
+            <ul class="list-disc list-inside text-gray-600 space-y-2">
+              <li>Employee of the Month - February 2023</li>
+              <li>Completed 10+ successful projects in 2022</li>
+              <li>Consistently exceeded performance goals</li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- Right Section -->
+        <div class="bg-white shadow-lg rounded-lg p-6">
+          <h3 class="text-xl font-semibold text-gray-800 mb-4">Update Profile</h3>
+          <form action="/update-profile" method="POST" class="space-y-4">
+            <!-- Update Email -->
+            <div>
+              <label for="email" class="block text-sm font-medium text-gray-700">Email</label>
+              <input type="email" 
+                id="newemail"  
+                class="w-full mt-1 px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
+                placeholder="Update your email">
+            </div>
+
+            <!-- Update Phone -->
+            <div>
+              <label for="phone" class="block text-sm font-medium text-gray-700">Phone</label>
+              <input 
+                type="text" 
+                id="newphone" 
+                class="w-full mt-1 px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
+                placeholder="Update your phone number">
+            </div>
+
+            <!-- Update Address -->
+            <div>
+              <label for="address" class="block text-sm font-medium text-gray-700">Address</label>
+              <input 
+                type="text" 
+                id="newaddress" 
+                class="w-full mt-1 px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
+                placeholder="Update your address">
+            </div>
+          </form>
+            <!-- Submit Button -->
+            <div>
+              <button 
+                onclick="updateprofileinfo()" 
+                class="w-full bg-blue-600 text-white font-medium py-2 rounded-md hover:bg-blue-700">
+                Save Changes
+              </button>
+            </div>
+          
+        </div>
+      </div>
+    </div>
+  </section>
+
+</body>
+</html>

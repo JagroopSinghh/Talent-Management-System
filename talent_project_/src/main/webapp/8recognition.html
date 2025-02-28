@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Recognition & Rewards - Talent Management System</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gradient-to-r from-indigo-500 to-pink-400 text-white">
+
+  <!-- Header -->
+  <header class="bg-white text-gray-800 shadow-md p-4">
+    <div class="container mx-auto flex justify-between items-center">
+      <h1 class="text-2xl font-bold">Recognition & Rewards</h1>
+      <nav>
+        <a href="/dashboard" class="text-gray-600 hover:text-gray-800 mx-2">Dashboard</a>
+        <a href="/profile" class="text-gray-600 hover:text-gray-800 mx-2">Profile</a>
+        <a href="/logout" class="text-gray-600 hover:text-gray-800 mx-2">Logout</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <main class="container mx-auto p-6">
+
+    <!-- Leaderboard -->
+    <section class="bg-white p-6 rounded-lg shadow-lg mb-8">
+      <h2 class="text-2xl font-semibold text-gray-800 mb-4">Top Performers</h2>
+      <div class="space-y-4">
+        <!-- Leaderboard Item -->
+        <div class="flex items-center justify-between">
+          <div class="flex items-center">
+            <div class="w-12 h-12 bg-teal-600 text-white rounded-full flex items-center justify-center mr-4">
+              <span class="text-xl">1</span>
+            </div>
+            <div>
+              <h3 class="text-lg font-semibold">John Doe</h3>
+              <p class="text-sm">Sales Manager</p>
+            </div>
+          </div>
+          <span class="text-sm text-gray-500">500 points</span>
+        </div>
+        <!-- Leaderboard Item -->
+        <div class="flex items-center justify-between">
+          <div class="flex items-center">
+            <div class="w-12 h-12 bg-teal-600 text-white rounded-full flex items-center justify-center mr-4">
+              <span class="text-xl">2</span>
+            </div>
+            <div>
+              <h3 class="text-lg font-semibold">Jane Smith</h3>
+              <p class="text-sm">Marketing Lead</p>
+            </div>
+          </div>
+          <span class="text-sm text-gray-500">450 points</span>
+        </div>
+        <!-- Leaderboard Item -->
+        <div class="flex items-center justify-between">
+          <div class="flex items-center">
+            <div class="w-12 h-12 bg-teal-600 text-white rounded-full flex items-center justify-center mr-4">
+              <span class="text-xl">3</span>
+            </div>
+            <div>
+              <h3 class="text-lg font-semibold">Alice Johnson</h3>
+              <p class="text-sm">Product Designer</p>
+            </div>
+          </div>
+          <span class="text-sm text-gray-500">400 points</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- Badges and Achievements -->
+    <section class="bg-white p-6 rounded-lg shadow-lg mb-8">
+      <h2 class="text-2xl font-semibold text-gray-800 mb-4">Your Achievements</h2>
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        <!-- Badge 1 -->
+        <div class="bg-teal-600 text-white p-4 rounded-lg shadow-md">
+          <h3 class="text-lg font-semibold">Top Seller</h3>
+          <p class="text-sm">Awarded for exceeding sales targets by 20%.</p>
+        </div>
+        <!-- Badge 2 -->
+        <div class="bg-teal-600 text-white p-4 rounded-lg shadow-md">
+          <h3 class="text-lg font-semibold">Innovation Champion</h3>
+          <p class="text-sm">Recognized for introducing a new marketing strategy.</p>
+        </div>
+        <!-- Badge 3 -->
+        <div class="bg-teal-600 text-white p-4 rounded-lg shadow-md">
+          <h3 class="text-lg font-semibold">Customer Hero</h3>
+          <p class="text-sm">Honored for outstanding customer service.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Nominate for Recognition -->
+    <section class="bg-white p-6 rounded-lg shadow-lg">
+      <h2 class="text-2xl font-semibold text-gray-800 mb-4">Nominate a Colleague</h2>
+      <form action="/submit-nomination" method="POST" class="space-y-4">
+        <div>
+          <label for="employee" class="block text-sm font-medium text-gray-700">Employee Name</label>
+          <input type="text" id="employee" name="employee" required class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-teal-500 focus:border-teal-500 sm:text-sm">
+        </div>
+        <div>
+          <label for="reason" class="block text-sm font-medium text-gray-700">Reason for Nomination</label>
+          <textarea id="reason" name="reason" rows="4" required class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-teal-500 focus:border-teal-500 sm:text-sm"></textarea>
+        </div>
+        <button type="submit" class="w-full py-2 px-4 bg-teal-600 text-white font-semibold rounded-md hover:bg-teal-700">Submit Nomination</button>
+      </form>
+    </section>
+
+  </main>
+
+</body>
+</html>

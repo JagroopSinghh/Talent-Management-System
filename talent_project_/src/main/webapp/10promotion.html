@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Promotion and Succession Planning</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body class="bg-gradient-to-r from-indigo-500 to-pink-400 font-sans leading-normal tracking-normal">
+    <!-- Header -->
+    <header class="bg-white shadow">
+        <div class="container mx-auto flex justify-between items-center p-6">
+            <h1 class="text-2xl font-bold text-gray-800">Promotion and Succession Planning</h1>
+            <div class="flex space-x-4">
+                <button class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">Add Candidate</button>
+                <button class="bg-gray-200 text-gray-800 px-4 py-2 rounded hover:bg-gray-300">Settings</button>
+            </div>
+        </div>
+    </header>
+
+    <div class="container mx-auto mt-6 flex">
+        <!-- Filters Panel -->
+        <aside class="w-1/4 bg-white p-6 rounded-lg shadow-lg">
+            <h2 class="text-xl font-semibold mb-4">Filters</h2>
+            <div class="mb-4">
+                <label class="block text-gray-700">Department</label>
+                <select class="form-select mt-1 block w-full">
+                    <option>All Departments</option>
+                    <option>Sales</option>
+                    <option>Engineering</option>
+                    <option>Human Resources</option>
+                </select>
+            </div>
+            <div class="mb-4">
+                <label class="block text-gray-700">Role Level</label>
+                <select class="form-select mt-1 block w-full">
+                    <option>All Levels</option>
+                    <option>Entry</option>
+                    <option>Mid</option>
+                    <option>Senior</option>
+                </select>
+            </div>
+            <div class="mb-4">
+                <label class="block text-gray-700">Readiness</label>
+                <select class="form-select mt-1 block w-full">
+                    <option>All</option>
+                    <option>Ready Now</option>
+                    <option>Ready in 1 Year</option>
+                    <option>Ready in 2+ Years</option>
+                </select>
+            </div>
+            <button class="bg-blue-500 text-white px-4 py-2 rounded w-full hover:bg-blue-600">Apply Filters</button>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="flex-1 ml-6">
+            <!-- Succession Planning Chart -->
+            <section class="bg-white p-6 rounded-lg shadow-lg mb-6">
+                <h2 class="text-xl font-semibold mb-4">Succession Planning Chart</h2>
+                <div class="overflow-x-auto">
+                    <table class="min-w-full bg-white">
+                        <thead>
+                            <tr>
+                                <th class="py-2 px-4 border-b">Employee Name</th>
+                                <th class="py-2 px-4 border-b">Current Role</th>
+                                <th class="py-2 px-4 border-b">Potential Role</th>
+                                <th class="py-2 px-4 border-b">Readiness</th>
+                                <th class="py-2 px-4 border-b">Development Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="py-2 px-4 border-b">Employee1</td>
+                                <td class="py-2 px-4 border-b">Software Engineer</td>
+                                <td class="py-2 px-4 border-b">Senior Software Engineer</td>
+                                <td class="py-2 px-4 border-b text-green-500">Ready Now</td>
+                                <td class="py-2 px-4 border-b">Leadership Training</td>
+                            </tr>
+                            <!-- More rows... -->
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- Promotion Candidates -->
+            <section class="bg-white p-6 rounded-lg shadow-lg">
+                <h2 class="text-xl font-semibold mb-4">Promotion Candidates</h2>
+                <div class="overflow-x-auto">
+                    <table class="min-w-full bg-white">
+                        <thead>
+                            <tr>
+                                <th class="py-2 px-4 border-b">Employee Name</th>
+                                <th class="py-2 px-4 border-b">Current Role</th>
+                                <th class="py-2 px-4 border-b">Time in Role</th>
+                                <th class="py-2 px-4 border-b">Performance Rating</th>
+                                <th class="py-2 px-4 border-b">Promotion Recommendation</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="py-2 px-4 border-b">Employee2</td>
+                                <td class="py-2 px-4 border-b">Sales Associate</td>
+                                <td class="py-2 px-4 border-b">3 Years</td>
+                                <td class="py-2 px-4 border-b">Exceeds Expectations</td>
+                                <td class="py-2 px-4 border-b text-green-500">Promote to Sales Manager</td>
+                            </tr>
+                            <!-- More rows... -->
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+        </main>
+    </div>
+</body>
+</html>

@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Employee Feedback - Talent Management System</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gradient-to-r from-indigo-500 to-pink-400 text-white" onload="showfeedback()">
+    <script>
+        function addfeedback(){
+            var ftype = document.getElementById("feedtype").value;
+            var feedback = document.getElementById("feedback").value;
+            
+            
+            
+            var formdata = new FormData();
+            formdata.append("ftype",ftype);
+            formdata.append("feedback",feedback);
+            var url = "/addfeedback";
+            
+            fetch(url,{method: "POST", body: formdata})
+                    .then(response => response.text())
+                    .then(ans => renderResponse(ans));            
+            
+        }
+        function renderResponse(ans){
+            console.log(ans);
+            if(ans == "success")
+            {
+                alert("Registeration successful");
+                showfeedback();
+            }
+            else
+            {
+                alert("Something went wrong at the backend");
+            }
+            
+        }
+        
+        function  showfeedback(){
+                var url ="./showfeedback";
+                
+                fetch(url,{method: "POST"})
+                    .then(response => response.text())
+                    .then(ans => renderposting(ans));
+            }
+            function renderposting(ans){
+               ans = ans.trim();
+                var mainobj = JSON.parse(ans);
+                var arr = mainobj["ans"];
+                var res = "";
+                for (var i = 0; i < arr.length; i++) {
+                    var st = arr[i];
+                    var status = (st.job_status = 1) ? "Active" : "Inactive";
+                   res += `<div class="bg-white p-6 rounded-lg shadow-lg">
+            <h3 class="text-lg font-semibold text-gray-700">`+st.feedback_type+`</h3>
+            <p class="text-2xl font-bold text-teal-600">`+st.mess+`</p>
+            
+          </div>`;
+
+                }
+                
+                document.getElementById("showfeedback").innerHTML = res;
+                
+                 }
+      
+        </script>
+  <!-- Header -->
+  <header class="bg-white text-gray-800 shadow-md p-4">
+    <div class="container mx-auto flex justify-between items-center">
+      <h1 class="text-2xl font-bold">Employee Feedback</h1>
+      <nav>
+        <a href="/dashboard" class="text-gray-600 hover:text-gray-800 mx-2">Dashboard</a>
+        <a href="/profile" class="text-gray-600 hover:text-gray-800 mx-2">Profile</a>
+        <a href="/logout" class="text-gray-600 hover:text-gray-800 mx-2">Logout</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <main class="container mx-auto p-6">
+
+    <!-- Feedback Overview -->
+    <section class="bg-white p-6 rounded-lg shadow-lg mb-8">
+      <h2 class="text-2xl font-semibold text-gray-800 mb-4">Your Feedback Overview</h2>
+      <div class="space-y-4">
+        <!-- Feedback Item -->
+        <div class="flex items-center justify-between">
+          <div class="flex items-center">
+            <div class="w-12 h-12 bg-teal-600 text-white rounded-full flex items-center justify-center mr-4">
+              <span class="text-xl">P</span>
+            </div>
+            <div>
+              <h3 class="text-lg font-semibold">Peer Feedback</h3>
+              <p class="text-sm">Feedback received from your peers.</p>
+            </div>
+          </div>
+          <span class="text-sm text-gray-500">4.5/5</span>
+        </div>
+        <!-- Feedback Item -->
+        <div class="flex items-center justify-between">
+          <div class="flex items-center">
+            <div class="w-12 h-12 bg-teal-600 text-white rounded-full flex items-center justify-center mr-4">
+              <span class="text-xl">M</span>
+            </div>
+            <div>
+              <h3 class="text-lg font-semibold">Manager Feedback</h3>
+              <p class="text-sm">Feedback from your direct manager.</p>
+            </div>
+          </div>
+          <span class="text-sm text-gray-500">4.7/5</span>
+        </div>
+        <!-- Feedback Item -->
+        <div class="flex items-center justify-between">
+          <div class="flex items-center">
+            <div class="w-12 h-12 bg-teal-600 text-white rounded-full flex items-center justify-center mr-4">
+              <span class="text-xl">H</span>
+            </div>
+            <div>
+              <h3 class="text-lg font-semibold">HR Feedback</h3>
+              <p class="text-sm">Feedback from the HR department.</p>
+            </div>
+          </div>
+          <span class="text-sm text-gray-500">4.8/5</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- Self-Assessment -->
+    <section class="bg-white p-6 rounded-lg shadow-lg mb-8">
+      <h2 class="text-2xl font-semibold text-gray-800 mb-4">Self-Assessment</h2>
+      <form action="/submit-self-assessment" method="POST" class="space-y-4">
+        <div>
+          <label for="self-assessment" class="block text-sm font-medium text-gray-700">Your Self-Assessment</label>
+          <textarea id="self-assessment" name="self-assessment" rows="4" required class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-teal-500 focus:border-teal-500 sm:text-sm"></textarea>
+        </div>
+        <button type="submit" class="w-full py-2 px-4 bg-teal-600 text-white font-semibold rounded-md hover:bg-teal-700">Submit Self-Assessment</button>
+      </form>
+    </section>
+
+    <!-- Request Feedback -->
+    <section class="bg-white p-6 rounded-lg shadow-lg mb-8">
+      <h2 class="text-2xl font-semibold text-gray-800 mb-4">Request Feedback</h2>
+      <form action="/submit-feedback-request" method="POST" class="space-y-4">
+        <div>
+          <label for="feedback-type" class="block text-sm font-medium text-gray-700">Feedback Type</label>
+          <input type="text" style="color:black;" id="feedtype" name="employee-name" required class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-teal-500 focus:border-teal-500 sm:text-sm">
+        
+        </div>
+        <div>
+          <label for="feedback-message" class="block text-sm font-medium text-gray-700">Message</label>
+          <textarea style="color:black;" id="feedback" name="feedback-message" rows="4" required class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-teal-500 focus:border-teal-500 sm:text-sm"></textarea>
+        </div>
+        </form>
+      <button onclick="addfeedback()" class="w-full py-2 px-4 bg-teal-600 text-white font-semibold rounded-md hover:bg-teal-700">Request Feedback</button>
+      
+    </section>
+
+    <!-- Manager Feedback -->
+    <section class="bg-white p-6 rounded-lg shadow-lg">
+      <h2 class="text-2xl font-semibold text-gray-800 mb-4">Provide Feedback</h2>
+      <form action="/submit-manager-feedback" method="POST" class="space-y-4">
+        <div id="showfeedback">
+          <label for="employee-name" class="block text-sm font-medium text-gray-700">Employee Name</label>
+          <input type="text" id="employee-name" name="employee-name" required class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-teal-500 focus:border-teal-500 sm:text-sm">
+        </div>
+        <div>
+          <label for="performance-rating" class="block text-sm font-medium text-gray-
+::contentReference[oaicite:0]{index=0}
+ 

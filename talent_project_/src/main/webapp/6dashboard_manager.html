@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Manager Dashboard - Talent Management System</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+</head>
+<body class="bg-gradient-to-r from-indigo-500 to-pink-400 text-white" onload="showjobposting()">
+<script>
+    var adkey="@21";
+      function addjobposting(){
+            var job = document.getElementById("job_posting").value;
+            var descc = document.getElementById("brief_desc").value;
+            var salary = document.getElementById("salary").value;
+            var vacancy = document.getElementById("vacancy").value;
+            
+            
+            
+            var formdata = new FormData();
+            formdata.append("job_name",job);
+            formdata.append("job_desc",descc);
+            formdata.append("salary",salary);
+            formdata.append("vacancy",vacancy);
+            var url = "/addjobposting";
+            
+            fetch(url,{method: "POST", body: formdata})
+                    .then(response => response.text())
+                    .then(ans => renderResponse(ans));            
+            
+        }
+        function renderResponse(ans){
+            console.log(ans);
+            if(ans == "success")
+            {
+                alert("Registeration successful");
+                showjobposting();
+            }
+            else
+            {
+                alert("Something went wrong at the backend");
+            }
+            
+        }
+        
+         function addcourse(){
+            var name = document.getElementById("course_name").value;
+            var info = document.getElementById("course_info").value;
+      
+            
+            
+            
+            var formdata = new FormData();
+            formdata.append("c_name",name);
+            formdata.append("C_info",info);
+         
+            var url = "/addcourse";
+            
+            fetch(url,{method: "POST", body: formdata})
+                    .then(response => response.text())
+                    .then(ans => rendercourse(ans));            
+            
+        }
+        function rendercourse(ans){
+            console.log(ans);
+            if(ans == "success")
+            {
+                alert("Course added");
+                showjobposting();
+            }
+            else
+            {
+                alert("Something went wrong at the backend");
+            }
+            
+        }
+        
+        
+        function  showjobposting(){
+            let adminkey = prompt("Enter your name:");
+            if(adminkey === adkey)
+            {
+                alert("Success");
+            }
+            else
+            {
+                alert("Your Administor key was wrong");
+                window.location.href = "index.html";
+
+            }
+                var url ="./showjobposting";
+                
+                fetch(url,{method: "POST"})
+                    .then(response => response.text())
+                    .then(ans => renderposting(ans));
+            }
+            function renderposting(ans){
+               ans = ans.trim();
+                var mainobj = JSON.parse(ans);
+                var arr = mainobj["ans"];
+                var res = "";
+                for (var i = 0; i < arr.length; i++) {
+                    var st = arr[i];
+                    var status = (st.job_status = 1) ? "Active" : "Inactive";
+                   res += `<div class="bg-white p-6 rounded-lg shadow-lg">
+            <h3 class="text-lg font-semibold text-gray-700">`+st.job_name+`</h3>
+            <p class="text-2xl font-bold text-teal-600">$`+st.salary+`</p>
+            <p class="text-sm text-gray-600">`+st.descr+`</p>
+            <p class="text-sm text-gray-600"><i>Vacancies `+st.vacancies+`</i></p>
+            <p class="text-sm text-gray-600"><b>Status `+status+`</b></p>
+          </div>`;
+
+                }
+                
+                document.getElementById("jobsdiv").innerHTML = res;
+                
+                 }
+      </script>
+  <!-- Dashboard Container -->
+  <div class="min-h-screen flex flex-col">
+
+    <!-- Header -->
+    <header class="bg-white text-gray-800 shadow-md p-4">
+      <div class="container mx-auto flex justify-between items-center">
+        <h1 class="text-2xl font-bold">Manager Dashboard</h1>
+        <nav>
+          <a href="/profile" class="text-gray-600 hover:text-gray-800 mx-2">Profile</a>
+          <a href="/settings" class="text-gray-600 hover:text-gray-800 mx-2">Settings</a>
+          <a href="/logout" class="text-gray-600 hover:text-gray-800 mx-2">Logout</a>
+        </nav>
+      </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="flex-grow p-6">
+
+      <!-- Team Performance Overview -->
+      <section class="mb-8">
+        <h2 class="text-xl font-semibold text-gray-800 mb-4">Team Performance Overview</h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <!-- Performance Card -->
+          <div class="bg-white p-6 rounded-lg shadow-lg">
+            <h3 class="text-lg font-semibold text-gray-700">Overall Team Performance</h3>
+            <p class="text-2xl font-bold text-teal-600">88%</p>
+            <p class="text-sm text-gray-600">Achieved this quarter</p>
+          </div>
+          <!-- Skill Gap Card -->
+          <div class="bg-white p-6 rounded-lg shadow-lg">
+            <h3 class="text-lg font-semibold text-gray-700">Skill Gaps Identified</h3>
+            <p class="text-2xl font-bold text-teal-600">5</p>
+            <p class="text-sm text-gray-600">Areas requiring development</p>
+          </div>
+          <!-- Feedback Score Card -->
+          <div class="bg-white p-6 rounded-lg shadow-lg">
+            <h3 class="text-lg font-semibold text-gray-700">Average Feedback Score</h3>
+            <p class="text-2xl font-bold text-teal-600">4.7/5</p>
+            <p class="text-sm text-gray-600">Team's average rating</p>
+          </div>
+        </div>
+      </section>
+      
+            <section class="mb-8">
+        <h2 class="text-xl font-semibold text-gray-800 mb-4">Job postings</h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="jobsdiv">
+          <!-- Performance Card -->
+          <div class="bg-white p-6 rounded-lg shadow-lg">
+            <h3 class="text-lg font-semibold text-gray-700">Overall Team Performance</h3>
+            <p class="text-2xl font-bold text-teal-600">88%</p>
+            <p class="text-sm text-gray-600">Achieved this quarter</p>
+          </div>
+          
+        </div>
+      </section>
+      
+      
+
+      
+      <!-- Analytics and Performance Trends -->
+      <section class="mb-8">
+        <h2 class="text-xl font-semibold text-gray-800 mb-4">Create a job posting</h2>
+        <div class="bg-white p-6 rounded-lg shadow-lg">
+          <div>
+              <label class="block text-sm font-medium text-gray-700">Job Posting</label>
+              <input type="text"  style="color: black;" id="job_posting" class="w-full mt-1 px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
+                placeholder="Job name">
+            
+            </div>
+        <div>
+              <label class="block text-sm font-medium text-gray-700">Breif description</label>
+              <input type="text" style="color: black;" id="brief_desc" class="w-full mt-1 px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
+                placeholder="Description">
+            
+            </div>
+            <div>
+              <label class="block text-sm font-medium text-gray-700">Salary</label>
+              <input type="text" id="salary" style="color: black;" class="w-full mt-1 px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
+                placeholder="Salary">
+            
+            </div>
+            <div>
+              <label class="block text-sm font-medium text-gray-700">Number of vacancies</label>
+              <input type="text" id="vacancy" style="color: black;" class="w-full mt-1 px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
+                placeholder="Job name">
+            
+            </div>
+            <br>
+            <div>
+              <button 
+                onclick="addjobposting()" 
+                class="w-full bg-blue-600 text-white font-medium py-2 rounded-md hover:bg-blue-700">
+                Post
+              </button>
+            </div>
+        </div>
+      </section>
+      
+      
+      <section class="mb-8">
+        <h2 class="text-xl font-semibold text-gray-800 mb-4">Create a course</h2>
+        <div class="bg-white p-6 rounded-lg shadow-lg">
+          <div>
+              <label class="block text-sm font-medium text-gray-700">Course name</label>
+              <input type="text"  style="color: black;" id="course_name" class="w-full mt-1 px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
+                placeholder="Job name">
+            
+            </div>
+        <div>
+              <label class="block text-sm font-medium text-gray-700">Course description</label>
+              <input type="text" style="color: black;" id="course_info" class="w-full mt-1 px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
+                placeholder="Description">
+            
+            </div>
+            <br>
+            <div>
+              <button 
+                onclick="addcourse()" 
+                class="w-full bg-blue-600 text-white font-medium py-2 rounded-md hover:bg-blue-700">
+                Post
+              </button>
+            </div>
+        </div>
+      </section>
+
+      <!-- Employee Profiles and Reviews -->
+      <section>
+        <h2 class="text-xl font-semibold text-gray-800 mb-4">Employee Profiles & Reviews</h2>
+        <div class="bg-white p-6 rounded-lg shadow-lg">
+          <h3 class="text-lg font-semibold text-gray-700">Employee Directory</h3>
+          <ul class="list-disc pl-5 text-sm text-gray-600">
+            <li><a href="/employee/1" class="text-teal-600 hover:text-teal-800">John Doe</a></li>
+            <li><a href="/employee/2" class="text-teal-600 hover:text-teal-800">Jane Smith</a></li>
+            <li><a href="/employee/3" class="text-teal-600 hover:text-teal-800">Alice Johnson</a></li>
+            <!-- Add more employees as needed -->
+          </ul>
+          <a href="/employees" class="text-teal-600 hover:text-teal-800 mt-4 inline-block">View All Employees</a>
+        </div>
+      </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-white text-gray-800 p-4">
+      <div class="container mx-auto text-center">
+        <p>&copy; 2025 Talent Management System. All rights reserved.</p>
+      </div>
+    </footer>
+
+  </div>
+
+</body>
+</html>

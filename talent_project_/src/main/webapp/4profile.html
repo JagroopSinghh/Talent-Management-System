@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Employee Profile - Talent Management System</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gradient-to-r from-indigo-500 to-pink-400 text-white">
+
+  <!-- Profile Container -->
+  <div class="min-h-screen flex flex-col">
+
+    <!-- Header -->
+    <header class="bg-white text-gray-800 shadow-md p-4">
+      <div class="container mx-auto flex justify-between items-center">
+        <h1 class="text-2xl font-bold">Employee Profile</h1>
+        <nav>
+          <a href="/dashboard" class="text-gray-600 hover:text-gray-800 mx-2">Dashboard</a>
+          <a href="/settings" class="text-gray-600 hover:text-gray-800 mx-2">Settings</a>
+          <a href="/logout" class="text-gray-600 hover:text-gray-800 mx-2">Logout</a>
+        </nav>
+      </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="flex-grow p-6">
+
+      <!-- Profile Overview -->
+      <section class="bg-white p-6 rounded-lg shadow-lg mb-8">
+        <div class="flex items-center space-x-6">
+          <img src="https://via.placeholder.com/100" alt="Profile Picture" class="w-24 h-24 rounded-full border-4 border-teal-600">
+          <div>
+            <h2 class="text-2xl font-semibold text-gray-800">Sam</h2>
+            <p class="text-lg text-gray-600">Software Engineer</p>
+            <p class="text-sm text-gray-500">Joined: January 2020</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Personal Information Form -->
+      <section class="bg-white p-6 rounded-lg shadow-lg mb-8">
+        <h3 class="text-xl font-semibold text-gray-800 mb-4">Personal Information</h3>
+        <form action="/update-profile" method="POST">
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div>
+              <label for="first-name" class="block text-sm font-medium text-gray-700">First Name</label>
+              <input type="text" id="first-name" name="first_name" value="John" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-teal-500 focus:border-teal-500">
+            </div>
+            <div>
+              <label for="last-name" class="block text-sm font-medium text-gray-700">Last Name</label>
+              <input type="text" id="last-name" name="last_name" value="Doe" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-teal-500 focus:border-teal-500">
+            </div>
+            <div>
+              <label for="email" class="block text-sm font-medium text-gray-700">Email</label>
+              <input type="email" id="email" name="email" value="john.doe@example.com" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-teal-500 focus:border-teal-500">
+            </div>
+            <div>
+              <label for="phone" class="block text-sm font-medium text-gray-700">Phone</label>
+              <input type="text" id="phone" name="phone" value="+1 234 567 890" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-teal-500 focus:border-teal-500">
+            </div>
+          </div>
+          <button type="submit" class="mt-4 w-full py-2 px-4 bg-teal-600 text-white font-semibold rounded-md shadow-sm hover:bg-teal-700 focus:outline-none focus:ring-2 focus:ring-teal-500 focus:ring-opacity-50">Update Information</button>
+        </form>
+      </section>
+
+      <!-- Skills and Career Aspirations -->
+      <section class="bg-white p-6 rounded-lg shadow-lg mb-8">
+        <h3 class="text-xl font-semibold text-gray-800 mb-4">Skills & Career Aspirations</h3>
+        <form action="/update-skills" method="POST">
+          <div class="mb-4">
+            <label for="skills" class="block text-sm font-medium text-gray-700">Skills</label>
+            <input type="text" id="skills" name="skills" value="JavaScript, React, Node.js" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-teal-500 focus:border-teal-500">
+          </div>
+          <div class="mb-4">
+            <label for="aspirations" class="block text-sm font-medium text-gray-700">Career Aspirations</label>
+            <textarea id="aspirations" name="aspirations" rows="4" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-teal-500 focus:border-teal-500">Lead a development team and contribute to innovative projects.</textarea>
+          </div>
+          <button type="submit" class="w-full py-2 px-4 bg-teal-600 text-white font-semibold rounded-md shadow-sm hover:bg-teal-700 focus:outline-none focus:ring-2 focus:ring-teal-500 focus:ring-opacity-50">Update Skills & Aspirations</button>
+        </form>
+      </section>
+
+      <!-- Document Upload -->
+      <section class="bg-white p-6 rounded-lg shadow-lg mb-8">
+        <h3 class="text-xl font-semibold text-gray-800 mb-4">Upload Documents</h3>
+        <form action="/upload-documents" method="POST" enctype="multipart/form-data">
+          <div class="mb-4">
+            <label for="cv" class="block text-sm font-medium text-gray-700">Upload CV</label>
+            <input type="file" id="cv" name="cv" class="mt-1 block w-full text-sm text-gray-500 file:py-2 file:px-4 file:border file:border-gray-300 file:rounded-md file:text-teal-600 file:bg-teal-50 hover:file:bg-teal-100">
+          </div>
+          <div class="mb-4">
+           
+::contentReference[oaicite:0]{index=0}
+ 

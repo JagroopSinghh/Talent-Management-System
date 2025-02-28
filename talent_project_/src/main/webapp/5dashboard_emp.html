@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Employee Dashboard - Talent Management System</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gradient-to-r from-indigo-500 to-pink-400 text-white" onload="showjobposting()">
+    <script>
+        function fetchUser() {
+            fetch("/fetchuser") // Adjust the API URL if needed
+            .then(response => response.json()) // Convert response to JSON
+            .then(data => {
+                localStorage.setItem("loggedInUser", data.username); // Store username
+                document.getElementById("usermail").innerText = data.username;
+            })
+            .catch(error => {
+                console.error("Error fetching user:", error);
+                document.getElementById("usermail").innerText = "Error loading user";
+            });
+        }
+        let storedUser = localStorage.getItem("loggedInUser");
+        console.log("Stored User:", storedUser);
+        // Call the function when the page loads
+        fetchUser();
+    
+        
+                function  showjobposting(){
+                var url ="./showjobposting";
+                
+                fetch(url,{method: "POST"})
+                    .then(response => response.text())
+                    .then(ans => renderposting(ans));
+            }
+            function renderposting(ans){
+               ans = ans.trim();
+                var mainobj = JSON.parse(ans);
+                var arr = mainobj["ans"];
+                var res = "";
+                for (var i = 0; i < arr.length; i++) {
+                    var st = arr[i];
+                    var status = (st.job_status = 1) ? "Active" : "Inactive";
+                   res += `<div class="bg-white p-6 rounded-lg shadow-lg">
+            <h3 class="text-lg font-semibold text-gray-700">`+st.job_name+`</h3>
+            <p class="text-2xl font-bold text-teal-600">$`+st.salary+`</p>
+            <p class="text-sm text-gray-600">`+st.descr+`</p>
+            <p class="text-sm text-gray-600"><i>Vacancies `+st.vacancies+`</i></p>
+            <p class="text-sm text-gray-600"><b>Status `+status+`</b></p>
+            <p class="text-sm text-gray-600"><button onclick = "registerEmp()" class=" py-1 px-2 text-lg font-semibold bg-pink-600 text-white rounded-lg hover:bg-pink-700 focus:outline-none focus:ring-2 focus:ring-pink-600 transition duration-300">Apply</button></p>
+          </div>`;
+
+                }
+                
+                document.getElementById("jobsdiv").innerHTML = res;
+                
+                 }
+        </script>
+  <!-- Dashboard Container -->
+  <div class="min-h-screen flex flex-col">
+
+    <!-- Header -->
+    <header class="bg-white text-gray-800 shadow-md p-4">
+      <div class="container mx-auto flex justify-between items-center">
+          <h1 class="text-2xl font-bold">Welcome, <div id="usermail">[Employee Name]</div></h1>
+        <nav>
+          <a href="/profile.html" class="text-gray-600 hover:text-gray-800 mx-2">Profile</a>
+          <a href="/settings" class="text-gray-600 hover:text-gray-800 mx-2">Settings</a>
+          <a href="/logout" class="text-gray-600 hover:text-gray-800 mx-2">Logout</a>
+        </nav>
+      </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="flex-grow p-6">
+
+      <!-- Performance Overview -->
+       <section class="mb-8">
+        <h2 class="text-xl font-semibold text-gray-800 mb-4">Job postings</h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="jobsdiv">
+          <!-- Performance Card -->
+          <div class="bg-white p-6 rounded-lg shadow-lg">
+            <h3 class="text-lg font-semibold text-gray-700">Overall Team Performance</h3>
+            <p class="text-2xl font-bold text-teal-600">88%</p>
+            <p class="text-sm text-gray-600">Achieved this quarter</p>
+          </div>
+          
+        </div>
+      </section>
+
+
+      <!-- Recognition and Rewards -->
+      <section class="mb-8">
+        <h2 class="text-xl font-semibold text-gray-800 mb-4">Recognition & Rewards</h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <!-- Badge Card -->
+          <div class="bg-white p-6 rounded-lg shadow-lg">
+            <h3 class="text-lg font-semibold text-gray-700">Top Performer</h3>
+            <p class="text-sm text-gray-600">Awarded for exceptional performance</p>
+          </div>
+          <!-- Points Card -->
+          <div class="bg-white p-6 rounded-lg shadow-lg">
+            <h3 class="text-lg font-semibold text-gray-700">Points Earned</h3>
+            <p class="text-2xl font-bold text-teal-600">1,200</p>
+            <p class="text-sm text-gray-600">Points accumulated this year</p>
+          </div>
+          <!-- Reward Card -->
+          <div class="bg-white p-6 rounded-lg shadow-lg">
+            <h3 class="text-lg font-semibold text-gray-700">Available Rewards</h3>
+            <ul class="list-disc pl-5 text-sm text-gray-600">
+              <li>Extra Vacation Day</li>
+              <li>Gift Card</li>
+              <li>Training Voucher</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <!-- Career Development Recommendations -->
+      <section>
+        <h2 class="text-xl font-semibold text-gray-800 mb-4">Career Development Recommendations</h2>
+        <div class="bg-white p-6 rounded-lg shadow-lg">
+          <h3 class="text-lg font-semibold text-gray-700">Recommended Courses</h3>
+          <ul class="list-disc pl-5 text-sm text-gray-600">
+            <li>Advanced Project Management</li>
+            <li>Leadership Skills Workshop</li>
+            <li>Data Analysis with Python</li>
+          </ul>
+          <a href="/courses" class="text-teal-600 hover:text-teal-800 mt-4 inline-block">View All Courses</a>
+        </div>
+      </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-white text-gray-800 p-4">
+      <div class="container mx-auto text-center">
+        <p>&copy; 2025 Talent Management System. All rights reserved.</p>
+      </div>
+    </footer>
+
+  </div>
+
+</body>
+</html>

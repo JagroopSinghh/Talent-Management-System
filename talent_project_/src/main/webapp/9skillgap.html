@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Skill Gap Analytics</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body class="bg-gradient-to-r from-indigo-500 to-pink-400 font-sans leading-normal tracking-normal">
+    <!-- Header -->
+    <header class="bg-white shadow">
+        <div class="container mx-auto flex justify-between items-center p-6">
+            <h1 class="text-2xl font-bold text-gray-800">Skill Gap Analytics</h1>
+            <div class="flex space-x-4">
+                <button class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">Export Report</button>
+                <button class="bg-gray-200 text-gray-800 px-4 py-2 rounded hover:bg-gray-300">Settings</button>
+            </div>
+        </div>
+    </header>
+
+    <div class="container mx-auto mt-6 flex">
+        <!-- Filters Panel -->
+        <aside class="w-1/4 bg-white p-6 rounded-lg shadow-lg">
+            <h2 class="text-xl font-semibold mb-4">Filters</h2>
+            <div class="mb-4">
+                <label class="block text-gray-700">Department</label>
+                <select class="form-select mt-1 block w-full">
+                    <option>All Departments</option>
+                    <option>Sales</option>
+                    <option>Engineering</option>
+                    <option>Human Resources</option>
+                </select>
+            </div>
+            <div class="mb-4">
+                <label class="block text-gray-700">Role</label>
+                <select class="form-select mt-1 block w-full">
+                    <option>All Roles</option>
+                    <option>Manager</option>
+                    <option>Team Lead</option>
+                    <option>Staff</option>
+                </select>
+            </div>
+            <div class="mb-4">
+                <label class="block text-gray-700">Skill Category</label>
+                <select class="form-select mt-1 block w-full">
+                    <option>All Categories</option>
+                    <option>Technical</option>
+                    <option>Soft Skills</option>
+                    <option>Leadership</option>
+                </select>
+            </div>
+            <button class="bg-blue-500 text-white px-4 py-2 rounded w-full hover:bg-blue-600">Apply Filters</button>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="flex-1 ml-6">
+            <!-- Key Metrics Overview -->
+            <section class="grid grid-cols-3 gap-6 mb-6">
+                <div class="bg-white p-6 rounded-lg shadow-lg">
+                    <h3 class="text-lg font-medium text-gray-700">Total Skill Gaps Identified</h3>
+                    <p class="text-3xl font-bold text-gray-900">24</p>
+                    <p class="text-sm text-gray-500">
+                        <span class="text-green-500">▲ 5%</span> from last month
+                    </p>
+                </div>
+                <div class="bg-white p-6 rounded-lg shadow-lg">
+                    <h3 class="text-lg font-medium text-gray-700">Employees Assessed</h3>
+                    <p class="text-3xl font-bold text-gray-900">150</p>
+                    <p class="text-sm text-gray-500">
+                        <span class="text-red-500">▼ 2%</span> from last month
+                    </p>
+                </div>
+                <div class="bg-white p-6 rounded-lg shadow-lg">
+                    <h3 class="text-lg font-medium text-gray-700">Training Programs Completed</h3>
+                    <p class="text-3xl font-bold text-gray-900">45</p>
+                    <p class="text-sm text-gray-500">
+                        <span class="text-green-500">▲ 8%</span> from last month
+                    </p>
+                </div>
+            </section>
+
+            <!-- Detailed Analytics -->
+            <section class="bg-white p-6 rounded-lg shadow-lg mb-6">
+                <h2 class="text-xl font-semibold mb-4">Skill Gap Analysis</h2>
+                <canvas id="skillGapChart" class="w-full h-64"></canvas>
+            </section>
+
+            <section class="bg-white p-6 rounded-lg shadow-lg">
+                <h2 class="text-xl font-semibold mb-4">Employee Skill Assessment</h2>
+                <div class="overflow-x-auto">
+                    <table class="min-w-full bg-white">
+                        <thead>
+                            <tr>
+                                <th class="py-2 px-4 border-b">Employee Name</th>
+                                <th class="py-2 px-4 border-b">Department</th>
+                                <th class="py-2 px-4 border-b">Role</th>
+                                <th class="py-2 px-4 border-b">Skill</th>
+                                <th class="py-2 px-4 border-b">Current Proficiency</th>
+                                <th class="py-2 px-4 border-b">Required Proficiency</th>
+                                <th class="py-2 px-4 border-b">Gap</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="py-2 px-4 border-b">Employee1</td>
+                                <td class="py-2 px-4 border-b">Engineering</td>
+                                <td class="py-2 px-4 border-b">Software Engineer</td>
+                                <td class="py-2 px-4 border-b">JavaScript</td>
+                                <td class="py-2 px-4 border-b">Intermediate</td>
+                                <td class="py-2 px-4 border-b">Advanced</td>
+                                <td class="py-2 px-4 border-b text-red-500">-1 Level</td>
+                            </tr>
+                            <!-- More rows... -->
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script>
+        // Sample data for the chart
+        const data = {
+            labels: ['Technical Skills', 'Soft Skills', 'Leadership', 'Communication', 'Project Management'],
+            datasets: [{
+                label: 'Skill Gaps',
+                data: [12, 9, 5, 7, 3],
+                backgroundColor: 'rgba(59, 130,120)'}]}
+    </script>
+    
