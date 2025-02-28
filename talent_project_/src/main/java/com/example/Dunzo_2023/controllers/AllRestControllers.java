@@ -94,18 +94,19 @@ public class AllRestControllers {
         return ans;
     }
 
-     @PostMapping("/addcourse")
+    @PostMapping("/addcourse")
     public String addcourse(@RequestParam String c_name,
-            @RequestParam String c_info) {
+            @RequestParam String c_info,@RequestParam String c_point) {
         String ans = "";
         try {
            
-            ResultSet rs = DBLoader.executeSQL("select * from coursename");
+            ResultSet rs = DBLoader.executeSQL("select * from course");
   
 
                 rs.moveToInsertRow();
                 rs.updateString("course_name", c_name);
                  rs.updateString("descr", c_info);
+                 rs.updateString("course_point", c_point);
                  
                 rs.insertRow();
                 ans = "success";
@@ -165,6 +166,15 @@ public class AllRestControllers {
 
         return ans;
     }
+    
+     @PostMapping("/showcourses")
+    public String showcourses() {
+
+        String ans = new RDBMS_TO_JSON().generateJSON("select * from course");
+
+        return ans;
+    }
+    
     @PostMapping("/updateprofileinfo")
     public String updateprofileinfo(@RequestParam String newmail, @RequestParam String newaddress, @RequestParam String newphone,@RequestParam String mail) {
         String ans;
@@ -175,6 +185,30 @@ public class AllRestControllers {
                 rs.updateString("E_phone", newphone);
                 rs.updateString("E_address", newaddress);
                 rs.updateString("E_mail", newmail);
+                rs.updateRow();
+            }
+                ans = "success";
+            
+        } catch (Exception e) {
+            return e.toString();
+        }
+         return ans;   
+    }
+    @PostMapping("/changejobsstatus")
+    public String changejobsstatus(@RequestParam String status, @RequestParam String job_id) {
+        String ans;
+        
+        try {
+           ResultSet rs = DBLoader.executeSQL("select * from job_posting where job_id = " + job_id + " and job_status = " + status);
+            if(rs.next()){
+                if(Integer.parseInt(status) == 1)
+                {
+                    rs.updateInt("job_status", 0);
+                }
+                else
+                {
+                    rs.updateInt("job_status", 1);
+                }
                 rs.updateRow();
             }
                 ans = "success";
