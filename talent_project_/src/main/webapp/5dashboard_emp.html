@@ -40,21 +40,57 @@
                 var res = "";
                 for (var i = 0; i < arr.length; i++) {
                     var st = arr[i];
-                    var status = (st.job_status = 1) ? "Active" : "Inactive";
+                    var status = (st.job_status == 1) ? "Active" : "Inactive";
+                   if(st.job_status == 1){
+                       var salarie = st.salary;
                    res += `<div class="bg-white p-6 rounded-lg shadow-lg">
             <h3 class="text-lg font-semibold text-gray-700">`+st.job_name+`</h3>
             <p class="text-2xl font-bold text-teal-600">$`+st.salary+`</p>
             <p class="text-sm text-gray-600">`+st.descr+`</p>
             <p class="text-sm text-gray-600"><i>Vacancies `+st.vacancies+`</i></p>
             <p class="text-sm text-gray-600"><b>Status `+status+`</b></p>
-            <p class="text-sm text-gray-600"><button onclick = "registerEmp()" class=" py-1 px-2 text-lg font-semibold bg-pink-600 text-white rounded-lg hover:bg-pink-700 focus:outline-none focus:ring-2 focus:ring-pink-600 transition duration-300">Apply</button></p>
+            <p class="text-sm text-gray-600"><button onclick = "applyjob(`+st.job_id+` , '`+ st.job_name +`' , '` +  st.salary+`'  )" class=" py-1 px-2 text-lg font-semibold bg-pink-600 text-white rounded-lg hover:bg-pink-700 focus:outline-none focus:ring-2 focus:ring-pink-600 transition duration-300">Apply</button></p>
           </div>`;
+                
+            }
 
                 }
                 
                 document.getElementById("jobsdiv").innerHTML = res;
                 
                  }
+                 
+                 
+            function applyjob(j_id, j_name , j_salary){
+
+           
+            
+            
+            var formdata = new FormData();
+            formdata.append("job_id",j_id);
+            formdata.append("job_name",j_name);
+            formdata.append("job_salary",j_salary);
+
+            var url = "/addjobapplication";
+            
+            fetch(url,{method: "POST", body: formdata})
+                    .then(response => response.text())
+                    .then(ans => renderaddjobappl(ans));            
+            
+        }
+        function renderaddjobappl(ans){
+            console.log(ans);
+            if(ans == "success")
+            {
+                alert("Job applied Successfully");
+                showjobposting();
+            }
+            else
+            {
+                alert(ans);
+            }
+            
+        }
         </script>
   <!-- Dashboard Container -->
   <div class="min-h-screen flex flex-col">

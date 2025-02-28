@@ -28,7 +28,12 @@ public class AllRestControllers {
         try {
             ResultSet rs = DBLoader.executeSQL("select * from employee_personal_data where E_mail= '" + mail + "' and E_password = '" + password + "' ");
             if (rs.next()) {
+                String E_id = Integer.toString(rs.getInt("E_id")); 
+                String E_name = rs.getString("E_name");
                 session.setAttribute("mail", mail);
+                session.setAttribute("E_id", E_id);
+                session.setAttribute("E_name", E_name);
+                
                 ans = "success";
             } else {
                 ans = "fail";
@@ -71,6 +76,7 @@ public class AllRestControllers {
         }
         return ans;
     }
+    
     
     @PostMapping("/addfeedback")
     public String addfeedback(@RequestParam String ftype,
@@ -174,6 +180,42 @@ public class AllRestControllers {
 
         return ans;
     }
+    
+     @PostMapping("/addjobapplication")
+    public String addjobapplication(@RequestParam int job_id,
+            @RequestParam String job_name,@RequestParam String job_salary, HttpSession session) {
+        String ans = "";
+        String E_id = (String) session.getAttribute("E_id");
+        String E_name = (String) session.getAttribute("E_name");
+        try {
+           
+            ResultSet rs = DBLoader.executeSQL("select * from job_applications where E_id = " + E_id + " and job_id = " + job_id);
+            if(rs.next())
+            {
+                ans = "You have already applied for this job";
+            }
+            else{
+            if (E_id != null){
+                rs.moveToInsertRow();
+                rs.updateInt("job_id", job_id);
+                 rs.updateInt("E_id", Integer.parseInt(E_id));
+                  rs.updateString("E_name", E_name);
+                   rs.updateString("job_name", job_name);
+                   rs.updateString("job_salary", job_salary);
+                rs.insertRow();
+                ans = "success";
+            }
+            else{
+                ans="Please login to apply for job  ";
+            }
+            }
+            
+        } catch (Exception e) {
+            return e.toString();
+        }
+        return ans;
+    }
+    
     
     @PostMapping("/updateprofileinfo")
     public String updateprofileinfo(@RequestParam String newmail, @RequestParam String newaddress, @RequestParam String newphone,@RequestParam String mail) {
