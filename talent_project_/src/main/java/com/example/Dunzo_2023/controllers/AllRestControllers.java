@@ -204,6 +204,13 @@ public class AllRestControllers {
 
         return ans;
     }
+    @PostMapping("/showactivites")
+    public String showactivites() {
+
+        String ans = new RDBMS_TO_JSON().generateJSON("select * from activity where a_status = 'Pending'");
+
+        return ans;
+    }
     
     @PostMapping("/updatejobappl")
     public String updatejobappl(@RequestParam String application_id, @RequestParam String appl_status) {
@@ -220,6 +227,37 @@ public class AllRestControllers {
                     ResultSet as = DBLoader.executeSQL("select * from employee_personal_data where E_id = " + E_id);
                     if(as.next()){
                     as.updateString("E_post", newpost);
+                    
+                    as.updateRow();
+            }
+            }
+                ans = "success";
+            
+        }
+        }catch (Exception e) {
+            return e.toString();
+           
+        }
+         return ans;  
+    }
+    
+    
+     @PostMapping("/updateactivitystatus")
+    public String updateactivitystatus(@RequestParam String a_id, @RequestParam String a_status) {
+        String ans,E_id;
+        ans="";
+        try {
+           ResultSet rs = DBLoader.executeSQL("select * from activity where a_id = " + a_id + "");
+            if(rs.next()){
+                rs.updateString("a_status", a_status);
+                E_id = Integer.toString(rs.getInt("E_id")); 
+                int new_point = rs.getInt("a_points");
+                rs.updateRow();
+                if("Accept".equals(a_status)){
+                    ResultSet as = DBLoader.executeSQL("select * from employee_personal_data where E_id = " + E_id);
+                    if(as.next()){
+                        int previous_point = as.getInt("E_point");
+                        as.updateInt("E_point", new_point+previous_point);
                     
                     as.updateRow();
             }
@@ -285,10 +323,54 @@ public class AllRestControllers {
         return ans;
     }
     
+    
+    @PostMapping("/addactivity")
+    public String addactivity(@RequestParam String name,
+            @RequestParam String descr,@RequestParam String points, HttpSession session) {
+        
+        String ans = "";
+        String E_id = (String) session.getAttribute("E_id");
+        String E_name = (String) session.getAttribute("E_name");
+        try {
+           
+            ResultSet rs = DBLoader.executeSQL("select * from activity where E_id = " + E_id + " and a_name = '" + name + "'");
+            if(rs.next())
+            {
+                ans = "Your request has been already submitted";
+            }
+            else{
+            if (E_id != null){
+                rs.moveToInsertRow();
+                 rs.updateInt("E_id", Integer.parseInt(E_id));
+                  rs.updateString("E_name", E_name);
+                   rs.updateString("a_name", name);
+                   rs.updateString("a_descr", descr);
+                   rs.updateInt("a_points", Integer.parseInt(points));
+                rs.insertRow();
+                ans = "success";
+            }
+            else{
+                ans="Please login to apply for job  ";
+            }
+            }
+            
+        } catch (Exception e) {
+            return e.toString();
+        }
+        return ans;
+    }
+    
       @PostMapping("/showmyjob")
     public String showmyjob(HttpSession session) {
         String E_id = (String) session.getAttribute("E_id");
         String ans = new RDBMS_TO_JSON().generateJSON("select * from  job_applications where E_id = " + E_id);
+        
+        return ans;
+    }
+         @PostMapping("/showmyactivity")
+    public String showmyactivity(HttpSession session) {
+        String E_id = (String) session.getAttribute("E_id");
+        String ans = new RDBMS_TO_JSON().generateJSON("select * from  activity where E_id = " + E_id);
         
         return ans;
     }

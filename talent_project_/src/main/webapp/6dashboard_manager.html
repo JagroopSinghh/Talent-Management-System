@@ -16,6 +16,7 @@
             showcourses();
             showjobappl();
             showgoal();
+            showactivity();
             let adminkey = prompt("Enter your admin key");
             if(adminkey === adkey)
             {
@@ -194,6 +195,7 @@
                    res += `<div class="bg-white p-6 rounded-lg shadow-lg">
                    <h3 class="text-lg font-semibold text-gray-700">`+st.E_name+`</h3>
             <h3 class="text-lg font-semibold text-gray-700">`+st.job_name+`</h3>
+            <p class="text-sm text-gray-600"><i>Employee Id : `+st.E_id+`</i></p>
             <p class="text-2xl font-bold text-teal-600">$`+st.job_salary+`</p>
             <p class="text-sm text-gray-600">`+st.applied_at+`</p>
             <p class="text-sm text-gray-600"><i>Status `+st.appl_status+`</i></p>
@@ -339,6 +341,93 @@
                 alert("Something went wrong at the backend");
             } 
         }
+        
+                function  showactivity(){
+
+                var url ="./showactivites";
+                
+                fetch(url,{method: "POST"})
+                    .then(response => response.text())
+                    .then(ans => renderactivity(ans));
+            }
+            function renderactivity(ans){
+               ans = ans.trim();
+                var mainobj = JSON.parse(ans);
+                var arr = mainobj["ans"];
+                var res = "";
+                console.log(ans);
+                for (var i = 0; i < arr.length; i++) {
+                    var st = arr[i];
+                    var status; 
+                 
+                    
+                   res += `<div class="bg-white p-6 rounded-lg shadow-lg">
+                   <h3 class="text-lg font-semibold text-gray-700">`+st.E_name+` applied for </h3>
+            <h3 class="text-lg font-semibold text-gray-700">`+st.a_name+`</h3>
+            <p class="text-sm text-gray-600"><i>Employee Id : `+st.E_id+`</i></p>
+            <p class="text-2xl font-bold text-teal-600">`+st.a_points+` Points</p>
+            <p class="text-sm text-gray-600">`+st.a_descr+`</p>
+            <p class="text-sm text-gray-600"><i>Status `+st.a_status+`</i></p>
+             <p class="text-sm text-gray-600"><b><button onclick="changeactivitystatus(`+st.a_id+`,`+ 0+`)" style="background: linear-gradient(to right,#007bff, #87CEFA); color: white; border: none; padding: 10px 20px; font-size: 16px; border-radius: 5px; cursor: pointer;transition: 0.3s;">Accept</button> <button onclick="changeactivitystatus(`+st.application_id+`,`+ 1 +`)" style="background: linear-gradient(to right,#007bff, #87CEFA); color: white; border: none; padding: 10px 20px; font-size: 16px; border-radius: 5px; cursor: pointer;transition: 0.3s;">Reject</button></b></p><br>
+                    
+            </div>`;
+
+                }
+                if(ans==="{\"ans\":[]}")
+                {
+                    res=`<div class="bg-white p-6 rounded-lg shadow-lg">
+                   <p class="text-2xl font-bold text-teal-600">No Job Application Yet</p></div>`;
+                    
+                }
+                
+                document.getElementById("activitydiv").innerHTML = res;
+                
+                 }
+         function changeactivitystatus(a_id,s)
+        {
+            var new_status;
+            var dooo;
+            if(s===0)
+            {
+                dooo = confirm("Are you sure you want to accept this activity");
+                new_status = "Accept";
+            }
+            if(s===1)
+            {
+                dooo = confirm("Are you sure you want to reject this activity");
+                new_status = "Reject";
+            }
+            if(dooo === true){
+               
+            
+            
+            var formdata = new FormData();
+            formdata.append("a_id",a_id);
+            formdata.append("a_status",new_status);
+            
+            var url = "/updateactivitystatus";
+            
+            fetch(url,{method: "POST", body: formdata})
+                    .then(response => response.text())
+                    .then(ans => renderResponseactivitystatus(ans));    
+            
+            
+        }
+    }
+        function renderResponseactivitystatus(ans){
+            console.log(ans);
+            if(ans === "success")
+            {
+                alert("successful");
+                showactivity();
+            }
+            else
+            {
+                alert("Something went wrong at the backend");
+            }
+            
+        }
+
       </script>
   <!-- Dashboard Container -->
   <div class="min-h-screen flex flex-col">
@@ -380,6 +469,19 @@
             <p class="text-2xl font-bold text-teal-600">4.7/5</p>
             <p class="text-sm text-gray-600">Team's average rating</p>
           </div>
+        </div>
+      </section>
+      
+      
+        <section class="mb-8">
+        <h2 class="text-xl font-semibold text-gray-800 mb-4">Emoployee Request Panel</h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="activitydiv">
+          <!-- Performance Card -->
+          <div class="bg-white p-6 rounded-lg shadow-lg">
+            <h3 class="text-lg font-semibold text-gray-700">Not Activity Yet</h3>
+            
+          </div>
+          
         </div>
       </section>
       
@@ -438,6 +540,19 @@
         </div>
       </section>
       
+             <section class="mb-8">
+        <h2 class="text-xl font-semibold text-gray-800 mb-4">Job Applications</h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="jobappldiv">
+          <!-- Performance Card -->
+          <div class="bg-white p-6 rounded-lg shadow-lg">
+            <h3 class="text-lg font-semibold text-gray-700">Overall Team Performance</h3>
+            <p class="text-2xl font-bold text-teal-600">88%</p>
+            <p class="text-sm text-gray-600">Achieved this quarter</p>
+          </div>
+          
+        </div>
+      </section>
+      
        <section class="mb-8">
         <h2 class="text-xl font-semibold text-gray-800 mb-4">Courses</h2>
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="coursediv">
@@ -485,6 +600,14 @@
         "
         oninput="document.getElementById('sliderValue').innerText = this.value">
                 <span id="sliderValue" style="color: black;display:inline-block;">250</span><span style="color:black;"> Points</span>
+            </div>
+            <br>
+            <div>
+              <button 
+                onclick="addcourse()" 
+                class="w-full bg-blue-600 text-white font-medium py-2 rounded-md hover:bg-blue-700">
+                Post
+              </button>
             </div>
             </section>
             

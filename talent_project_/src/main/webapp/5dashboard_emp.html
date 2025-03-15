@@ -6,8 +6,15 @@
   <title>Employee Dashboard - Talent Management System</title>
   <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class="bg-gradient-to-r from-indigo-500 to-pink-400 text-white" onload="showjobposting()">
+<body class="bg-gradient-to-r from-indigo-500 to-pink-400 text-white" onload="starter()">
     <script>
+        function starter()
+        {
+            showjobposting();
+            showgoal();
+            showcourses();
+            showmyactivity();
+        }
         function fetchUser() {
             fetch("/fetchuser") // Adjust the API URL if needed
             .then(response => response.json()) // Convert response to JSON
@@ -133,6 +140,141 @@
             }
             
         }
+        
+         function  showgoal(){
+
+                var url ="./showgoal";
+                
+                fetch(url,{method: "POST"})
+                    .then(response => response.text())
+                    .then(ans => rendergoals(ans));
+            }
+            function rendergoals(ans){
+               ans = ans.trim();
+                var mainobj = JSON.parse(ans);
+                var arr = mainobj["ans"];
+                var res = "";
+                console.log(ans);
+                for (var i = 0; i < arr.length; i++) {
+                    var st = arr[i];
+                    
+                    
+                   res += `<div class="bg-white p-6 rounded-lg shadow-lg">
+            <h3 class="text-lg font-semibold text-gray-700">`+st.goal_name+`</h3>
+            <p class="text-sm text-gray-600">`+st.goal_info+`</p>
+            <p class="text-2xl font-bold text-teal-600">`+st.goal_points+` Points</p>
+            <p class="text-sm text-gray-600"><button onclick = "completeactivity('`+st.goal_name+`' , '`+ st.goal_info +`' , ` +  st.goal_points+`  )" class=" py-1 px-2 text-lg font-semibold bg-pink-600 text-white rounded-lg hover:bg-pink-700 focus:outline-none focus:ring-2 focus:ring-pink-600 transition duration-300">Complete</button></p>
+            </div>`;
+
+                }
+                
+                document.getElementById("taskdiv").innerHTML = res;
+                
+                 }
+                  function  showcourses(){
+
+                var url ="./showcourses";
+                
+                fetch(url,{method: "POST"})
+                    .then(response => response.text())
+                    .then(ans => rendercourses(ans));
+            }
+            function rendercourses(ans){
+               ans = ans.trim();
+                var mainobj = JSON.parse(ans);
+                var arr = mainobj["ans"];
+                var res = "";
+                console.log(ans);
+                for (var i = 0; i < arr.length; i++) {
+                    var st = arr[i];
+                    
+                    
+                   res += `<div class="bg-white p-6 rounded-lg shadow-lg">
+            <h3 class="text-lg font-semibold text-gray-700">`+st.course_name+`</h3>
+            <p class="text-sm text-gray-600">`+st.descr+`</p>
+            <p class="text-2xl font-bold text-teal-600">`+st.course_point+` Points</p>
+              <p class="text-sm text-gray-600"><button onclick = "completeactivity('`+st.course_name+`' , '`+ st.descr +`' , ` +  st.course_point+`  )" class=" py-1 px-2 text-lg font-semibold bg-pink-600 text-white rounded-lg hover:bg-pink-700 focus:outline-none focus:ring-2 focus:ring-pink-600 transition duration-300">Complete</button></p>
+          
+            </div>`;
+
+                }
+                
+                document.getElementById("coursediv").innerHTML = res;
+                
+                 }
+                 
+                 
+           function completeactivity(name, descr , points){
+               
+           
+            
+            
+            var formdata = new FormData();
+            formdata.append("name",name);
+            formdata.append("descr",descr);
+            formdata.append("points",points);
+
+            var url = "/addactivity";
+            
+            fetch(url,{method: "POST", body: formdata})
+                    .then(response => response.text())
+                    .then(ans => renderactivity(ans));            
+            
+        }
+        function renderactivity(ans){
+            console.log(ans);
+            if(ans == "success")
+            {
+                alert("Application Submitted");
+                showmyactivity();
+            }
+            else
+            {
+                alert(ans);
+            }
+            
+        }
+        
+        
+        function  showmyactivity(){
+                var url ="./showmyactivity";
+                
+                fetch(url,{method: "POST"})
+                    .then(response => response.text())
+                    .then(ans => rendermyactivity(ans));
+            }
+            function rendermyactivity(ans){
+               ans = ans.trim();
+               var res = "";
+               if(ans=="{\"ans\":[]}"){
+                   res += `<div class="bg-white p-6 rounded-lg shadow-lg">
+            
+            <p class="text-2xl font-bold text-teal-600">Not Job applied yet</p>
+            </div>`;
+               }
+               else{
+                var mainobj = JSON.parse(ans);
+                var arr = mainobj["ans"];
+                
+                for (var i = 0; i < arr.length; i++) {
+                    var st = arr[i];
+                   res += `<div class="bg-white p-6 rounded-lg shadow-lg">
+            <h3 class="text-lg font-semibold text-gray-700">`+st.a_name+`</h3>
+            
+            <p class="text-sm text-gray-600">Employee name : `+st.a_descr+`</p>
+            <p class="text-2xl font-bold text-teal-600">`+st.a_points+` Points</p>
+            <p class="text-sm text-gray-600"><b>Status `+st.a_status+`</b></p>
+            </div>`;
+                
+            }
+        }
+
+                
+                
+                document.getElementById("myactivitysdiv").innerHTML = res;
+            
+                 }
+        
         </script>
   <!-- Dashboard Container -->
   <div class="min-h-screen flex flex-col">
@@ -181,7 +323,45 @@
         </div>
       </section>
       
+      
+            <section class="mb-8">
+        <h2 class="text-xl font-semibold text-gray-800 mb-4">My Activity</h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="myactivitysdiv">
+          <!-- Performance Card -->
+          <div class="bg-white p-6 rounded-lg shadow-lg">
+            <h3 class="text-lg font-semibold text-gray-700">No Activity Yet</h3>
+   
+          </div>
+          
+        </div>
+      </section>
+      
 
+             <section class="mb-8">
+        <h2 class="text-xl font-semibold text-gray-800 mb-4">Courses</h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="coursediv">
+          <!-- Performance Card -->
+          <div class="bg-white p-6 rounded-lg shadow-lg">
+            <h3 class="text-lg font-semibold text-gray-700">Overall Team Performance</h3>
+            <p class="text-2xl font-bold text-teal-600">88%</p>
+            <p class="text-sm text-gray-600">Achieved this quarter</p>
+          </div>
+          
+        </div>
+      </section>
+      
+             <section class="mb-8">
+        <h2 class="text-xl font-semibold text-gray-800 mb-4">Tasks/Goals</h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="taskdiv">
+          <!-- Performance Card -->
+          <div class="bg-white p-6 rounded-lg shadow-lg">
+            <h3 class="text-lg font-semibold text-gray-700">Overall Team Performance</h3>
+            <p class="text-2xl font-bold text-teal-600">88%</p>
+            <p class="text-sm text-gray-600">Achieved this quarter</p>
+          </div>
+          
+        </div>
+      </section>
 
       <!-- Recognition and Rewards -->
       <section class="mb-8">
