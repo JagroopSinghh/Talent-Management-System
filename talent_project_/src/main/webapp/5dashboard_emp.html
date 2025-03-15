@@ -57,7 +57,49 @@
                 }
                 
                 document.getElementById("jobsdiv").innerHTML = res;
+                showmyjob();
+                 }
+                 
+            
+            function  showmyjob(){
+                var url ="./showmyjob";
                 
+                fetch(url,{method: "POST"})
+                    .then(response => response.text())
+                    .then(ans => rendermyjob(ans));
+            }
+            function rendermyjob(ans){
+               ans = ans.trim();
+               var res = "";
+               if(ans=="{\"ans\":[]}"){
+                   res += `<div class="bg-white p-6 rounded-lg shadow-lg">
+            
+            <p class="text-2xl font-bold text-teal-600">Not Job applied yet</p>
+            </div>`;
+               }
+               else{
+                var mainobj = JSON.parse(ans);
+                var arr = mainobj["ans"];
+                
+                for (var i = 0; i < arr.length; i++) {
+                    var st = arr[i];
+                   res += `<div class="bg-white p-6 rounded-lg shadow-lg">
+            <h3 class="text-lg font-semibold text-gray-700">`+st.job_name+`</h3>
+            
+            <p class="text-sm text-gray-600">Employee name : `+st.E_name+`</p>
+            <p class="text-sm text-gray-600">Application number : `+st.application_id+`</p>
+            <p class="text-sm text-gray-600"><i>Applied at `+st.applied_at+`</i></p>
+            <p class="text-2xl font-bold text-teal-600">$`+st.job_salary+`</p>
+            <p class="text-sm text-gray-600"><b>Status `+st.appl_status+`</b></p>
+            </div>`;
+                
+            }
+        }
+
+                
+                
+                document.getElementById("myjobsdiv").innerHTML = res;
+            
                  }
                  
                  
@@ -123,6 +165,22 @@
           
         </div>
       </section>
+      
+      
+      <!-- Myjobs -->
+       <section class="mb-8">
+        <h2 class="text-xl font-semibold text-gray-800 mb-4">My Job</h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="myjobsdiv">
+          <!-- Performance Card -->
+          <div class="bg-white p-6 rounded-lg shadow-lg">
+            <h3 class="text-lg font-semibold text-gray-700">Overall Team Performance</h3>
+            <p class="text-2xl font-bold text-teal-600">88%</p>
+            <p class="text-sm text-gray-600">Achieved this quarter</p>
+          </div>
+          
+        </div>
+      </section>
+      
 
 
       <!-- Recognition and Rewards -->

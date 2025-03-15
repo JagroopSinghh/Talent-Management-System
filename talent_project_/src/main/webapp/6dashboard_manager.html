@@ -14,6 +14,8 @@
     {
             showjobposting();
             showcourses();
+            showjobappl();
+            showgoal();
             let adminkey = prompt("Enter your admin key");
             if(adminkey === adkey)
             {
@@ -96,6 +98,41 @@
             
         }
         
+        function addgoal(){
+            var name = document.getElementById("goal_name").value;
+            var info = document.getElementById("goal_info").value;
+            var points = document.getElementById("coursepointrangergoal").value;
+            
+            
+            
+            
+            var formdata = new FormData();
+            formdata.append("g_name",name);
+            formdata.append("g_info",info);
+            formdata.append("g_point",points);
+         
+            var url = "/addgoal";
+            
+            fetch(url,{method: "POST", body: formdata})
+                    .then(response => response.text())
+                    .then(ans => rendergoal(ans));            
+            
+        }
+        function rendergoal(ans){
+            console.log(ans);
+            if(ans == "success")
+            {
+                alert("Goall added");
+                showgoal();
+            }
+            else
+            {
+                alert("Something went wrong at the backend");
+            }
+            
+        }
+        
+        
         
         function  showjobposting(){
 
@@ -133,6 +170,94 @@
                 
                  }
                  
+                 
+                 
+        function  showjobappl(){
+
+                var url ="./showjobappl";
+                
+                fetch(url,{method: "POST"})
+                    .then(response => response.text())
+                    .then(ans => renderpostingappl(ans));
+            }
+            function renderpostingappl(ans){
+               ans = ans.trim();
+                var mainobj = JSON.parse(ans);
+                var arr = mainobj["ans"];
+                var res = "";
+                console.log(ans);
+                for (var i = 0; i < arr.length; i++) {
+                    var st = arr[i];
+                    var status; 
+                 
+                    
+                   res += `<div class="bg-white p-6 rounded-lg shadow-lg">
+                   <h3 class="text-lg font-semibold text-gray-700">`+st.E_name+`</h3>
+            <h3 class="text-lg font-semibold text-gray-700">`+st.job_name+`</h3>
+            <p class="text-2xl font-bold text-teal-600">$`+st.job_salary+`</p>
+            <p class="text-sm text-gray-600">`+st.applied_at+`</p>
+            <p class="text-sm text-gray-600"><i>Status `+st.appl_status+`</i></p>
+             <p class="text-sm text-gray-600"><b><button onclick="changeapplstatus(`+st.application_id+`,`+ 0+`)" style="background: linear-gradient(to right,#007bff, #87CEFA); color: white; border: none; padding: 10px 20px; font-size: 16px; border-radius: 5px; cursor: pointer;transition: 0.3s;">Accept</button> <button onclick="changeapplstatus(`+st.application_id+`,`+ 1 +`)" style="background: linear-gradient(to right,#007bff, #87CEFA); color: white; border: none; padding: 10px 20px; font-size: 16px; border-radius: 5px; cursor: pointer;transition: 0.3s;">Reject</button></b></p><br>
+                    
+            </div>`;
+
+                }
+                if(ans==="{\"ans\":[]}")
+                {
+                    res=`<div class="bg-white p-6 rounded-lg shadow-lg">
+                   <p class="text-2xl font-bold text-teal-600">No Job Application Yet</p></div>`;
+                    
+                }
+                
+                document.getElementById("jobappldiv").innerHTML = res;
+                
+                 }
+                 
+        function changeapplstatus(a_id,s)
+        {
+            var new_status;
+            var dooo;
+            if(s===0)
+            {
+                dooo = confirm("Are you sure you want to accept this employee");
+                new_status = "Accept";
+            }
+            if(s===1)
+            {
+                dooo = confirm("Are you sure you want to reject this employee");
+                new_status = "Reject";
+            }
+            if(dooo === true){
+               
+            
+            
+            var formdata = new FormData();
+            formdata.append("application_id",a_id);
+            formdata.append("appl_status",new_status);
+            
+            var url = "/updatejobappl";
+            
+            fetch(url,{method: "POST", body: formdata})
+                    .then(response => response.text())
+                    .then(ans => renderResponseapplstatus(ans));    
+            
+            
+        }
+    }
+        function renderResponseapplstatus(ans){
+            console.log(ans);
+            if(ans === "success")
+            {
+                alert("successful");
+                showjobappl();
+            }
+            else
+            {
+                alert("Something went wrong at the backend");
+            }
+            
+        }
+
         function  showcourses(){
 
                 var url ="./showcourses";
@@ -160,6 +285,36 @@
                 }
                 
                 document.getElementById("coursediv").innerHTML = res;
+                
+                 }
+                 
+        function  showgoal(){
+
+                var url ="./showgoal";
+                
+                fetch(url,{method: "POST"})
+                    .then(response => response.text())
+                    .then(ans => rendergoals(ans));
+            }
+            function rendergoals(ans){
+               ans = ans.trim();
+                var mainobj = JSON.parse(ans);
+                var arr = mainobj["ans"];
+                var res = "";
+                console.log(ans);
+                for (var i = 0; i < arr.length; i++) {
+                    var st = arr[i];
+                    
+                    
+                   res += `<div class="bg-white p-6 rounded-lg shadow-lg">
+            <h3 class="text-lg font-semibold text-gray-700">`+st.goal_name+`</h3>
+            <p class="text-sm text-gray-600">`+st.goal_info+`</p>
+            <p class="text-2xl font-bold text-teal-600">`+st.goal_points+` Points</p>
+            </div>`;
+
+                }
+                
+                document.getElementById("taskdiv").innerHTML = res;
                 
                  }
                  
@@ -331,17 +486,72 @@
         oninput="document.getElementById('sliderValue').innerText = this.value">
                 <span id="sliderValue" style="color: black;display:inline-block;">250</span><span style="color:black;"> Points</span>
             </div>
+            </section>
+            
+            
+            <br>
+            
+       <section class="mb-8">
+        <h2 class="text-xl font-semibold text-gray-800 mb-4">Tasks/Goals</h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="taskdiv">
+          <!-- Performance Card -->
+          <div class="bg-white p-6 rounded-lg shadow-lg">
+            <h3 class="text-lg font-semibold text-gray-700">Overall Team Performance</h3>
+            <p class="text-2xl font-bold text-teal-600">88%</p>
+            <p class="text-sm text-gray-600">Achieved this quarter</p>
+          </div>
+          
+        </div>
+      </section>
+      
+      
+      <section class="mb-8">
+        <h2 class="text-xl font-semibold text-gray-800 mb-4">Create a task/goal</h2>
+        <div class="bg-white p-6 rounded-lg shadow-lg">
+          <div>
+              <label class="block text-sm font-medium text-gray-700">Task/goal name</label>
+              <input type="text"  style="color: black;" id="goal_name" class="w-full mt-1 px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
+                placeholder="Job name">
+            
+            </div>
+        <div>
+              <label class="block text-sm font-medium text-gray-700">Goal description</label>
+              <input type="text" style="color: black;" id="goal_info" class="w-full mt-1 px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
+                placeholder="Description">
+            
+            </div>
+            <br>
+            <div>
+                <label class="block text-sm font-medium text-gray-700">Goal Points:</label>
+                <input type="range" id="coursepointrangergoal" min="0" max="500" value="250" 
+        style="
+            -webkit-appearance: none;
+            width: 80%;
+            max-width: 400px;
+            height: 10px;
+            border-radius: 5px;
+            background: linear-gradient(to right, #22755f, #22b47f);
+            outline: none;
+            transition: 0.3s;
+            cursor: pointer;
+            
+        "
+        oninput="document.getElementById('sliderValu').innerText = this.value">
+                <span id="sliderValu" style="color: black;display:inline-block;">250</span><span style="color:black;"> Points</span>
+            </div>
             
             <br>
             <div>
               <button 
-                onclick="addcourse()" 
+                onclick="addgoal()" 
                 class="w-full bg-blue-600 text-white font-medium py-2 rounded-md hover:bg-blue-700">
                 Post
               </button>
             </div>
         </div>
       </section>
+      
+
 
       <!-- Employee Profiles and Reviews -->
       <section>

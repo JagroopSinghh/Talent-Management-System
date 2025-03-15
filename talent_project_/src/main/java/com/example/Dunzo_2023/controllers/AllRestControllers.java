@@ -123,6 +123,29 @@ public class AllRestControllers {
         return ans;
     }
     
+    @PostMapping("/addgoal")
+    public String addgoal(@RequestParam String g_name,
+            @RequestParam String g_info,@RequestParam String g_point) {
+        String ans = "";
+        try {
+           
+            ResultSet rs = DBLoader.executeSQL("select * from goals");
+  
+
+                rs.moveToInsertRow();
+                rs.updateString("goal_name", g_name);
+                 rs.updateString("goal_info", g_info);
+                 rs.updateString("goal_points", g_point);
+                 
+                rs.insertRow();
+                ans = "success";
+            
+        } catch (Exception e) {
+            return e.toString();
+        }
+        return ans;
+    }
+    
     @PostMapping("/showfeedback")
     public String showfeedback() {
 
@@ -173,10 +196,56 @@ public class AllRestControllers {
         return ans;
     }
     
+    
+        @PostMapping("/showjobappl")
+    public String showjobappl() {
+
+        String ans = new RDBMS_TO_JSON().generateJSON("select * from job_applications where appl_status = 'Pending'");
+
+        return ans;
+    }
+    
+    @PostMapping("/updatejobappl")
+    public String updatejobappl(@RequestParam String application_id, @RequestParam String appl_status) {
+        String ans,E_id;
+        ans="";
+        try {
+           ResultSet rs = DBLoader.executeSQL("select * from job_applications where application_id = " + application_id + "");
+            if(rs.next()){
+                rs.updateString("appl_status", appl_status);
+                E_id = Integer.toString(rs.getInt("E_id")); 
+                String newpost = rs.getString("job_name");
+                rs.updateRow();
+                if("Accept".equals(appl_status)){
+                    ResultSet as = DBLoader.executeSQL("select * from employee_personal_data where E_id = " + E_id);
+                    if(as.next()){
+                    as.updateString("E_post", newpost);
+                    
+                    as.updateRow();
+            }
+            }
+                ans = "success";
+            
+        }
+        }catch (Exception e) {
+            return e.toString();
+           
+        }
+         return ans;  
+    }
+    
+    
      @PostMapping("/showcourses")
     public String showcourses() {
 
         String ans = new RDBMS_TO_JSON().generateJSON("select * from course");
+
+        return ans;
+    }
+       @PostMapping("/showgoal")
+    public String showgoal() {
+
+        String ans = new RDBMS_TO_JSON().generateJSON("select * from goals");
 
         return ans;
     }
@@ -213,6 +282,14 @@ public class AllRestControllers {
         } catch (Exception e) {
             return e.toString();
         }
+        return ans;
+    }
+    
+      @PostMapping("/showmyjob")
+    public String showmyjob(HttpSession session) {
+        String E_id = (String) session.getAttribute("E_id");
+        String ans = new RDBMS_TO_JSON().generateJSON("select * from  job_applications where E_id = " + E_id);
+        
         return ans;
     }
     
