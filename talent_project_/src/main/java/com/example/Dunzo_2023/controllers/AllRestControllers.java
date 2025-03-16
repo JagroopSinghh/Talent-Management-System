@@ -241,6 +241,29 @@ public class AllRestControllers {
          return ans;  
     }
     
+    @PostMapping("/updateemprole")
+    public String updateemprole(@RequestParam String E_post, @RequestParam String E_mail) {
+        
+        String ans="";
+        try {
+           ResultSet rs = DBLoader.executeSQL("select * from employee_personal_data where E_mail = '" + E_mail + "'");
+            if(rs.next()){
+                rs.updateString("E_post", E_post);
+                
+                rs.updateRow();
+                
+            }
+                ans = "success";
+            
+        }
+    
+        catch (Exception e) {
+            return e.toString();
+           
+        }
+         return ans;  
+    }
+    
     
      @PostMapping("/updateactivitystatus")
     public String updateactivitystatus(@RequestParam String a_id, @RequestParam String a_status) {
@@ -271,7 +294,13 @@ public class AllRestControllers {
         }
          return ans;  
     }
-    
+    @PostMapping("/showrequest")
+    public String showrequest(@RequestParam String sqlcommand) {
+
+        String ans = new RDBMS_TO_JSON().generateJSON(sqlcommand);
+        System.out.println(sqlcommand);
+        return ans;
+    }
     
      @PostMapping("/showcourses")
     public String showcourses() {

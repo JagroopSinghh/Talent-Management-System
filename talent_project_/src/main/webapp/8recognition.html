@@ -7,11 +7,116 @@
   <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body class="bg-gradient-to-r from-indigo-500 to-pink-400 text-white">
+    <script>
+        function fetchUser() {
+            fetch("/fetchuser") // Adjust the API URL if needed
+            .then(response => response.json()) // Convert response to JSON
+            .then(data => {
+                localStorage.setItem("loggedInUser", data.username); // Store username
+                document.getElementById("usermail").innerText = data.username;
+            })
+            .catch(error => {
+                console.error("Error fetching user:", error);
+                document.getElementById("usermail").innerText = "Error loading user";
+            });
+        }
+        let storedUser = localStorage.getItem("loggedInUser");
+        console.log("Stored User:", storedUser);
+        // Call the function when the page loads
+        fetchUser();
+        showmyactivity();
+        topperformer();
+        function  showmyactivity(){
+                var url ="./showrequest?sqlcommand=select * from activity where a_status = 'Accept'";
+                
+                fetch(url,{method: "POST"})
+                    .then(response => response.text())
+                    .then(ans => rendermyactivity(ans));
+            }
+            function rendermyactivity(ans){
+               ans = ans.trim();
+               
+               var res = "";
+               if(ans=="{\"ans\":[]}"){
+                   res += `<div class="bg-white p-6 rounded-lg shadow-lg">
+            
+            <p class="text-2xl font-bold text-teal-600">Not Job applied yet</p>
+            </div>`;
+               }
+               else{
+                var mainobj = JSON.parse(ans);
+                var arr = mainobj["ans"];
+                
+                for (var i = 0; i < arr.length; i++) {
+                    var st = arr[i];
+                   res += `<div class="bg-white p-6 rounded-lg shadow-lg">
+            <h3 class="text-lg font-semibold text-gray-700">`+st.a_name+`</h3>
+            
+            <p class="text-sm text-gray-600">Employee name : `+st.a_descr+`</p>
+            <p class="text-2xl font-bold text-teal-600">`+st.a_points+` Points</p>
+            <p class="text-sm text-gray-600"><b>Status `+st.a_status+`</b></p>
+            </div>`;
+                
+            }
+        }
 
+                
+                
+                document.getElementById("myactivitysdiv").innerHTML = res;
+            
+                 }
+        
+        function  topperformer(){
+                var url ="./showrequest?sqlcommand=select * from employee_personal_data order by E_point desc";
+                
+                fetch(url,{method: "POST"})
+                    .then(response => response.text())
+                    .then(ans => rendertopperformer(ans));
+            }
+            function rendertopperformer(ans){
+               ans = ans.trim();
+               
+               var res = "";
+               if(ans=="{\"ans\":[]}"){
+                   res += `<div class="bg-white p-6 rounded-lg shadow-lg">
+            
+            <p class="text-2xl font-bold text-teal-600">Not Job applied yet</p>
+            </div>`;
+               }
+               else{
+                var mainobj = JSON.parse(ans);
+                var arr = mainobj["ans"];
+                
+                for (var i = 0; i < arr.length; i++) {
+                    var st = arr[i];
+                   res += `<div class="flex items-center justify-between" style="color:black;">
+          <div class="flex items-center">
+            <div class="w-12 h-12 bg-teal-600 text-white rounded-full flex items-center justify-center mr-4">
+              <span class="text-xl">`+(i+1)+`</span>
+            </div>
+            <div>
+              <h3 class="text-lg font-semibold">`+st.E_name+`</h3>
+              <p class="text-sm">`+st.E_post+`</p>
+            </div>
+          </div>
+          <span class="text-sm text-gray-500">`+st.E_point+` points</span>
+        </div>`;
+                
+            }
+        }
+
+                
+                
+                document.getElementById("topperformerdiv").innerHTML = res;
+            
+                 }
+        
+    
+        </script>
   <!-- Header -->
   <header class="bg-white text-gray-800 shadow-md p-4">
     <div class="container mx-auto flex justify-between items-center">
-      <h1 class="text-2xl font-bold">Recognition & Rewards</h1>
+      <h1 class="text-2xl font-bold">Recognition & Rewards<br>Welcome, <div id="usermail">[Employee Name]</div></h1>
       <nav>
         <a href="/dashboard" class="text-gray-600 hover:text-gray-800 mx-2">Dashboard</a>
         <a href="/profile" class="text-gray-600 hover:text-gray-800 mx-2">Profile</a>
@@ -26,7 +131,7 @@
     <!-- Leaderboard -->
     <section class="bg-white p-6 rounded-lg shadow-lg mb-8">
       <h2 class="text-2xl font-semibold text-gray-800 mb-4">Top Performers</h2>
-      <div class="space-y-4">
+      <div class="space-y-4" id="topperformerdiv">
         <!-- Leaderboard Item -->
         <div class="flex items-center justify-between">
           <div class="flex items-center">
@@ -72,7 +177,7 @@
     <!-- Badges and Achievements -->
     <section class="bg-white p-6 rounded-lg shadow-lg mb-8">
       <h2 class="text-2xl font-semibold text-gray-800 mb-4">Your Achievements</h2>
-      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6" id="myactivitysdiv">
         <!-- Badge 1 -->
         <div class="bg-teal-600 text-white p-4 rounded-lg shadow-md">
           <h3 class="text-lg font-semibold">Top Seller</h3>

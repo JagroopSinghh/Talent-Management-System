@@ -7,11 +7,168 @@
   <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body class="bg-gradient-to-r from-indigo-500 to-pink-400 text-white">
+    <script>
+        
+        function fetchUser() {
+            fetch("/fetchuser") // Adjust the API URL if needed
+            .then(response => response.json()) // Convert response to JSON
+            .then(data => {
+                localStorage.setItem("loggedInUser", data.username); // Store username
+                document.getElementById("usermail").innerText = data.username;
+            })
+            .catch(error => {
+                console.error("Error fetching user:", error);
+                document.getElementById("usermail").innerText = "Error loading user";
+            });
+        }
+        let storedUser = localStorage.getItem("loggedInUser");
+        console.log("Stored User:", storedUser);
+        // Call the function when the page loads
+        fetchUser();
+        showcourses();
+        showgoal();
+        showmyactivity();
+          function  showgoal(){
 
-  <!-- Header -->
+                var url ="./showgoal";
+                
+                fetch(url,{method: "POST"})
+                    .then(response => response.text())
+                    .then(ans => rendergoals(ans));
+            }
+            function rendergoals(ans){
+               ans = ans.trim();
+                var mainobj = JSON.parse(ans);
+                var arr = mainobj["ans"];
+                var res = "";
+                console.log(ans);
+                for (var i = 0; i < arr.length; i++) {
+                    var st = arr[i];
+                    
+                    
+                   res += `<div class="bg-white p-6 rounded-lg shadow-lg">
+            <h3 class="text-lg font-semibold text-gray-700">`+st.goal_name+`</h3>
+            <p class="text-sm text-gray-600">`+st.goal_info+`</p>
+            <p class="text-2xl font-bold text-teal-600">`+st.goal_points+` Points</p>
+            <p class="text-sm text-gray-600"><button onclick = "completeactivity('`+st.goal_name+`' , '`+ st.goal_info +`' , ` +  st.goal_points+`  )" class=" py-1 px-2 text-lg font-semibold bg-pink-600 text-white rounded-lg hover:bg-pink-700 focus:outline-none focus:ring-2 focus:ring-pink-600 transition duration-300">Enroll now</button></p>
+            </div>`;
+
+                }
+                
+                document.getElementById("taskdiv").innerHTML = res;
+                
+                 }
+                  function  showcourses(){
+
+                var url ="./showcourses";
+                
+                fetch(url,{method: "POST"})
+                    .then(response => response.text())
+                    .then(ans => rendercourses(ans));
+            }
+            function rendercourses(ans){
+               ans = ans.trim();
+                var mainobj = JSON.parse(ans);
+                var arr = mainobj["ans"];
+                var res = "";
+                console.log(ans);
+                for (var i = 0; i < arr.length; i++) {
+                    var st = arr[i];
+                    
+                    
+                   res += `<div class="bg-white p-6 rounded-lg shadow-lg">
+            <h3 class="text-lg font-semibold text-gray-700">`+st.course_name+`</h3>
+            <p class="text-sm text-gray-600">`+st.descr+`</p>
+            <p class="text-2xl font-bold text-teal-600">`+st.course_point+` Points</p>
+              <p class="text-sm text-gray-600"><button onclick = "completeactivity('`+st.course_name+`' , '`+ st.descr +`' , ` +  st.course_point+`  )" class=" py-1 px-2 text-lg font-semibold bg-pink-600 text-white rounded-lg hover:bg-pink-700 focus:outline-none focus:ring-2 focus:ring-pink-600 transition duration-300">Enroll Now</button></p>
+          
+            </div>`;
+
+                }
+                
+                document.getElementById("coursediv").innerHTML = res;
+                
+                 }
+                 
+                 
+           function completeactivity(name, descr , points){
+               
+           
+            
+            
+            var formdata = new FormData();
+            formdata.append("name",name);
+            formdata.append("descr",descr);
+            formdata.append("points",points);
+
+            var url = "/addactivity";
+            
+            fetch(url,{method: "POST", body: formdata})
+                    .then(response => response.text())
+                    .then(ans => renderactivity(ans));            
+            
+        }
+        function renderactivity(ans){
+            console.log(ans);
+            if(ans == "success")
+            {
+                alert("Application Submitted");
+                showmyactivity();
+            }
+            else
+            {
+                alert(ans);
+            }
+            
+        }
+        
+        
+        function  showmyactivity(){
+                var url ="./showmyactivity";
+                
+                fetch(url,{method: "POST"})
+                    .then(response => response.text())
+                    .then(ans => rendermyactivity(ans));
+            }
+            function rendermyactivity(ans){
+               ans = ans.trim();
+               var res = "";
+               if(ans=="{\"ans\":[]}"){
+                   res += `<div class="bg-white p-6 rounded-lg shadow-lg">
+            
+            <p class="text-2xl font-bold text-teal-600">Not Job applied yet</p>
+            </div>`;
+               }
+               else{
+                var mainobj = JSON.parse(ans);
+                var arr = mainobj["ans"];
+                
+                for (var i = 0; i < arr.length; i++) {
+                    var st = arr[i];
+                   res += `<div class="bg-white p-6 rounded-lg shadow-lg">
+            <h3 class="text-lg font-semibold text-gray-700">`+st.a_name+`</h3>
+            
+            <p class="text-sm text-gray-600">Employee name : `+st.a_descr+`</p>
+            <p class="text-2xl font-bold text-teal-600">`+st.a_points+` Points</p>
+            <p class="text-sm text-gray-600"><b>Status `+st.a_status+`</b></p>
+            </div>`;
+                
+            }
+        }
+
+                
+                
+                document.getElementById("myactivitysdiv").innerHTML = res;
+            
+                 }
+        
+    
+    </script>
+    <!-- Header -->
   <header class="bg-white text-gray-800 shadow-md p-4">
     <div class="container mx-auto flex justify-between items-center">
-      <h1 class="text-2xl font-bold">Learning & Development</h1>
+        <h1 class="text-2xl font-bold">Learning & Development<br>Welcome, <div id="usermail">[Employee Name]</div></h1><br>
+   
       <nav>
         <a href="/dashboard" class="text-gray-600 hover:text-gray-800 mx-2">Dashboard</a>
         <a href="/profile" class="text-gray-600 hover:text-gray-800 mx-2">Profile</a>
@@ -26,84 +183,44 @@
     <!-- Learning Modules -->
     <section class="bg-white p-6 rounded-lg shadow-lg mb-8">
       <h2 class="text-2xl font-semibold text-gray-800 mb-4">Available Learning Modules</h2>
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        <!-- Module 1 -->
-        <div class="bg-teal-600 text-white p-4 rounded-lg shadow-md">
-          <h3 class="text-xl font-semibold">Advanced JavaScript</h3>
-          <p class="text-sm">Deep dive into JavaScript ES6+ features and best practices.</p>
-          <div class="mt-4">
-            <span class="text-sm">Points: 50</span>
-            <span class="ml-4 text-sm">Duration: 3 hours</span>
+      <section class="mb-8">
+        <h2 class="text-xl font-semibold text-gray-800 mb-4">My Activity</h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="myactivitysdiv">
+          <!-- Performance Card -->
+          <div class="bg-white p-6 rounded-lg shadow-lg">
+            <h3 class="text-lg font-semibold text-gray-700">No Activity Yet</h3>
+   
           </div>
-          <button class="mt-4 w-full py-2 px-4 bg-teal-700 text-white font-semibold rounded-md hover:bg-teal-800">Enroll Now</button>
+          
         </div>
-        <!-- Module 2 -->
-        <div class="bg-teal-600 text-white p-4 rounded-lg shadow-md">
-          <h3 class="text-xl font-semibold">React for Beginners</h3>
-          <p class="text-sm">Learn the fundamentals of React.js and build interactive UIs.</p>
-          <div class="mt-4">
-            <span class="text-sm">Points: 40</span>
-            <span class="ml-4 text-sm">Duration: 2 hours</span>
-          </div>
-          <button class="mt-4 w-full py-2 px-4 bg-teal-700 text-white font-semibold rounded-md hover:bg-teal-800">Enroll Now</button>
-        </div>
-        <!-- Module 3 -->
-        <div class="bg-teal-600 text-white p-4 rounded-lg shadow-md">
-          <h3 class="text-xl font-semibold">Node.js Essentials</h3>
-          <p class="text-sm">Understand the core concepts of Node.js and server-side development.</p>
-          <div class="mt-4">
-            <span class="text-sm">Points: 60</span>
-            <span class="ml-4 text-sm">Duration: 4 hours</span>
-          </div>
-          <button class="mt-4 w-full py-2 px-4 bg-teal-700 text-white font-semibold rounded-md hover:bg-teal-800">Enroll Now</button>
-        </div>
-      </div>
-    </section>
+      </section>
+      
 
-    <!-- Progress Tracker -->
-    <section class="bg-white p-6 rounded-lg shadow-lg mb-8">
-      <h2 class="text-2xl font-semibold text-gray-800 mb-4">Your Learning Progress</h2>
-      <div class="space-y-4">
-        <!-- Progress Item -->
-        <div class="flex items-center justify-between">
-          <div class="flex items-center">
-            <div class="w-12 h-12 bg-teal-600 text-white rounded-full flex items-center justify-center mr-4">
-              <span class="text-xl">1</span>
-            </div>
-            <div>
-              <h3 class="text-lg font-semibold">Advanced JavaScript</h3>
-              <p class="text-sm">Completed 80% - 40/50 points</p>
-            </div>
+             <section class="mb-8">
+        <h2 class="text-xl font-semibold text-gray-800 mb-4">Courses</h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="coursediv">
+          <!-- Performance Card -->
+          <div class="bg-white p-6 rounded-lg shadow-lg">
+            <h3 class="text-lg font-semibold text-gray-700">Overall Team Performance</h3>
+            <p class="text-2xl font-bold text-teal-600">88%</p>
+            <p class="text-sm text-gray-600">Achieved this quarter</p>
           </div>
-          <span class="text-sm text-gray-500">2 hours left</span>
+          
         </div>
-        <!-- Progress Item -->
-        <div class="flex items-center justify-between">
-          <div class="flex items-center">
-            <div class="w-12 h-12 bg-teal-600 text-white rounded-full flex items-center justify-center mr-4">
-              <span class="text-xl">2</span>
-            </div>
-            <div>
-              <h3 class="text-lg font-semibold">React for Beginners</h3>
-              <p class="text-sm">Completed 50% - 20/40 points</p>
-            </div>
+      </section>
+      
+             <section class="mb-8">
+        <h2 class="text-xl font-semibold text-gray-800 mb-4">Tasks/Goals</h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="taskdiv">
+          <!-- Performance Card -->
+          <div class="bg-white p-6 rounded-lg shadow-lg">
+            <h3 class="text-lg font-semibold text-gray-700">Overall Team Performance</h3>
+            <p class="text-2xl font-bold text-teal-600">88%</p>
+            <p class="text-sm text-gray-600">Achieved this quarter</p>
           </div>
-          <span class="text-sm text-gray-500">3 hours left</span>
+          
         </div>
-        <!-- Progress Item -->
-        <div class="flex items-center justify-between">
-          <div class="flex items-center">
-            <div class="w-12 h-12 bg-teal-600 text-white rounded-full flex items-center justify-center mr-4">
-              <span class="text-xl">3</span>
-            </div>
-            <div>
-              <h3 class="text-lg font-semibold">Node.js Essentials</h3>
-              <p class="text-sm">Not Started</p>
-            </div>
-          </div>
-          <span class="text-sm text-gray-500">4 hours left</span>
-        </div>
-      </div>
+
     </section>
 
     <!-- Manager's Dashboard -->

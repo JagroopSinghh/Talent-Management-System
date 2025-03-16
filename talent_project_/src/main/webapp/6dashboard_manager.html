@@ -17,6 +17,7 @@
             showjobappl();
             showgoal();
             showactivity();
+            showallactivity();
             let adminkey = prompt("Enter your admin key");
             if(adminkey === adkey)
             {
@@ -383,7 +384,48 @@
                 document.getElementById("activitydiv").innerHTML = res;
                 
                  }
-         function changeactivitystatus(a_id,s)
+            function  showallactivity(){
+
+                var url ="./showrequest?sqlcommand=select * from activity";
+                
+                fetch(url,{method: "POST"})
+                    .then(response => response.text())
+                    .then(ans => rendershowallactivity(ans));
+            }
+            function rendershowallactivity(ans){
+               ans = ans.trim();
+                var mainobj = JSON.parse(ans);
+                var arr = mainobj["ans"];
+                var res = "";
+                console.log(ans);
+                for (var i = 0; i < arr.length; i++) {
+                    var st = arr[i];
+                    var status; 
+                 
+                    
+                   res += `<div class="bg-white p-6 rounded-lg shadow-lg">
+                   <h3 class="text-lg font-semibold text-gray-700">`+st.E_name+` applied for </h3>
+            <h3 class="text-lg font-semibold text-gray-700">`+st.a_name+`</h3>
+            <p class="text-sm text-gray-600"><i>Employee Id : `+st.E_id+`</i></p>
+            <p class="text-2xl font-bold text-teal-600">`+st.a_points+` Points</p>
+            <p class="text-sm text-gray-600">`+st.a_descr+`</p>
+            <p class="text-sm text-gray-600"><i>Status `+st.a_status+`</i></p>
+                   
+            </div>`;
+
+                }
+                if(ans==="{\"ans\":[]}")
+                {
+                    res=`<div class="bg-white p-6 rounded-lg shadow-lg">
+                   <p class="text-2xl font-bold text-teal-600">No Job Application Yet</p></div>`;
+                    
+                }
+                
+                document.getElementById("allactivitydiv").innerHTML = res;
+                
+                 }
+
+    function changeactivitystatus(a_id,s)
         {
             var new_status;
             var dooo;
@@ -674,7 +716,17 @@
         </div>
       </section>
       
-
+                    <section class="mb-8">
+        <h2 class="text-xl font-semibold text-gray-800 mb-4">All Activities</h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="allactivitydiv">
+          <!-- Performance Card -->
+          <div class="bg-white p-6 rounded-lg shadow-lg">
+            <h3 class="text-lg font-semibold text-gray-700">Not Activity Yet</h3>
+            
+          </div>
+          
+        </div>
+      </section>
 
       <!-- Employee Profiles and Reviews -->
       <section>
